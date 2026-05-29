@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS scheduled_classes (
   created_at timestamptz DEFAULT now(),
   class_type_id uuid NOT NULL REFERENCES class_types(id),
   staff_id uuid,
+  recurring_schedule_id uuid REFERENCES recurring_schedules(id),
   start_time timestamptz NOT NULL,
   end_time timestamptz NOT NULL,
   status text NOT NULL DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'cancelled', 'completed'))
@@ -121,4 +122,20 @@ CREATE TABLE IF NOT EXISTS staff (
 
 ALTER TABLE staff ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Studio owners can manage staff" ON staff
+  FOR ALL USING (true);
+
+-- Recurring schedules (weekly class patterns)
+CREATE TABLE IF NOT EXISTS recurring_schedules (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  class_type_id uuid NOT NULL REFERENCES class_types(id) ON DELETE CASCADE,
+  staff_id uuid REFERENCES staff(id),
+  day_of_week integer NOT NULL CHECK (day_of_week BETWEEN 0 AND 6),
+  start_time time NOT NULL,
+  active boolean NOT NULL DEFAULT true,
+  UNIQUE(class_type_id, day_of_week, start_time)
+);
+
+ALTER TABLE recurring_schedules ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Studio owners can manage recurring schedules" ON recurring_schedules
   FOR ALL USING (true);

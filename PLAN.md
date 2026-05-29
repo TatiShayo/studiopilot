@@ -11,12 +11,12 @@
 - [x] Membership plans: create plans (monthly flat, per-class, drop-in), assign to clients
 
 ## PHASE 3: CLASS SCHEDULING
-- [ ] Class types: create (yoga, spin, HIIT etc.) with duration, capacity, price
-- [ ] Class schedule: weekly recurring schedule (Mon 9am Yoga, etc.)
-- [ ] Class detail: who's booked, waitlist, check-in button
-- [ ] Client booking: clients can book classes via their portal link
-- [ ] Waitlist: automatic promotion when spot opens
-- [ ] Class cancellation: notify booked clients via email
+- [x] Class types: create (yoga, spin, HIIT etc.) with duration, capacity, price
+- [x] Class schedule: weekly recurring schedule (Mon 9am Yoga, etc.)
+- [x] Class detail: who's booked, waitlist, check-in button
+- [x] Client booking: clients can book classes via their portal link
+- [x] Waitlist: automatic promotion when spot opens
+- [x] Class cancellation: notify booked clients via email
 
 ## PHASE 4: PAYMENTS
 - [ ] Payment recording: log cash/card/M-Pesa payment per client

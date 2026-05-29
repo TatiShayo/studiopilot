@@ -45,11 +45,22 @@ export interface ClassType {
   active: boolean;
 }
 
+export interface RecurringSchedule {
+  id: string;
+  created_at: string;
+  class_type_id: string;
+  staff_id: string | null;
+  day_of_week: number;
+  start_time: string;
+  active: boolean;
+}
+
 export interface ScheduledClass {
   id: string;
   created_at: string;
   class_type_id: string;
   staff_id: string | null;
+  recurring_schedule_id: string | null;
   start_time: string;
   end_time: string;
   status: "scheduled" | "cancelled" | "completed";

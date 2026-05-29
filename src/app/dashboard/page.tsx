@@ -1,12 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Users, Calendar, CreditCard, TrendingUp } from "lucide-react";
+import { Users, Calendar, CreditCard, TrendingUp, ArrowRight } from "lucide-react";
+import { startOfDay, endOfDay } from "date-fns";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -18,6 +20,25 @@ export default async function DashboardPage() {
     redirect("/auth/login");
   }
 
+  const today = new Date();
+  const todayStart = startOfDay(today).toISOString();
+  const todayEnd = endOfDay(today).toISOString();
+
+  const { count: totalClients } = await supabase
+    .from("clients")
+    .select("*", { count: "exact", head: true });
+
+  const { count: classesToday } = await supabase
+    .from("scheduled_classes")
+    .select("*", { count: "exact", head: true })
+    .gte("start_time", todayStart)
+    .lte("start_time", todayEnd);
+
+  const { count: activeClients } = await supabase
+    .from("clients")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "active");
+
   return (
     <div>
       <h1 className="mb-6 text-2xl font-bold tracking-tight">Dashboard</h1>
@@ -28,9 +49,9 @@ export default async function DashboardPage() {
             <Users className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">—</div>
+            <div className="text-2xl font-bold">{totalClients ?? 0}</div>
             <p className="text-xs text-muted-foreground">
-              Client management coming in Phase 2
+              {activeClients ?? 0} active
             </p>
           </CardContent>
         </Card>
@@ -41,10 +62,13 @@ export default async function DashboardPage() {
             <Calendar className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">—</div>
-            <p className="text-xs text-muted-foreground">
-              Scheduling coming in Phase 3
-            </p>
+            <div className="text-2xl font-bold">{classesToday ?? 0}</div>
+            <Link
+              href="/dashboard/classes/upcoming"
+              className="text-xs text-primary hover:underline inline-flex items-center gap-1"
+            >
+              View schedule <ArrowRight className="size-3" />
+            </Link>
           </CardContent>
         </Card>
 
