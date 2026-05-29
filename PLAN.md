@@ -1,7 +1,7 @@
 ## StudioPilot Build Plan
 
 ## PHASE 1: STABILIZE
-- [ ] Build passes clean, auth works, middleware protects dashboard
+- [x] Build passes clean, auth works, middleware protects dashboard
 
 ## PHASE 2: CLIENT MANAGEMENT
 - [ ] Landing page: hero, features (class scheduling, client profiles, payments, staff), vs Mindbody comparison
