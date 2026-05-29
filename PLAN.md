@@ -1,0 +1,43 @@
+## StudioPilot Build Plan
+
+## PHASE 1: STABILIZE
+- [ ] Build passes clean, auth works, middleware protects dashboard
+
+## PHASE 2: CLIENT MANAGEMENT
+- [ ] Landing page: hero, features (class scheduling, client profiles, payments, staff), vs Mindbody comparison
+- [ ] Client list: searchable, with tags (active/inactive/vip), membership status, last visit
+- [ ] Add/edit client: name, email, phone, emergency contact, medical notes, membership tier
+- [ ] Client profile: visit history, class attendance, payment history, notes timeline
+- [ ] Membership plans: create plans (monthly flat, per-class, drop-in), assign to clients
+
+## PHASE 3: CLASS SCHEDULING
+- [ ] Class types: create (yoga, spin, HIIT etc.) with duration, capacity, price
+- [ ] Class schedule: weekly recurring schedule (Mon 9am Yoga, etc.)
+- [ ] Class detail: who's booked, waitlist, check-in button
+- [ ] Client booking: clients can book classes via their portal link
+- [ ] Waitlist: automatic promotion when spot opens
+- [ ] Class cancellation: notify booked clients via email
+
+## PHASE 4: PAYMENTS
+- [ ] Payment recording: log cash/card/M-Pesa payment per client
+- [ ] Membership billing: Stripe subscriptions for monthly members
+- [ ] Outstanding balance: flag clients with overdue payments
+- [ ] Revenue dashboard: daily/weekly/monthly revenue chart
+
+## PHASE 5: STAFF
+- [ ] Staff profiles: name, specialties, schedule
+- [ ] Staff assignment to classes
+- [ ] Staff hours log
+
+## PHASE 6: TESTING & POLISH
+- [ ] Unit tests for booking logic (no double-booking, capacity enforcement)
+- [ ] E2e: book a class flow
+- [ ] Mobile responsive (owners check stats on phone)
+- [ ] Lighthouse ≥85
+
+## PHASE 7: ADVANCED
+- [ ] Automated birthday emails to clients
+- [ ] Class series packages (10-class pack)
+- [ ] AI class description generator
+- [ ] Retention alerts: flag clients who haven't visited in 30 days
+- [ ] Digital waiver signing: clients sign liability waiver online before first class
