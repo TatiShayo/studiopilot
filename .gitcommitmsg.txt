@@ -1,12 +1,11 @@
-Phase 1: Auth, middleware, dashboard scaffold
+Phase 2: Client management complete
 
-- Supabase client/server/middleware utils
-- Proxy middleware protecting /dashboard routes
-- Auth login page (email/password + magic link)
-- Auth callback route for magic link / OAuth
-- Dashboard layout (sidebar nav on desktop, bottom nav on mobile)
-- Dashboard overview page with stat cards
-- Landing page with hero, features, pricing comparison
-- Updated root layout metadata
+- Searchable client list with status badges, membership tier, last visit
+- Add client form (name, email, phone, emergency contact, medical notes, membership tier, status)
+- Client profile page with visit history, payment history, notes timeline tabs
+- Contact info, emergency contact, medical notes, stats sidebar cards
+- Membership plans CRUD: create plans (monthly/per-class/drop-in) with pricing
+- Toggle plan active/inactive
+- Shared types and Supabase schema SQL
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>

@@ -4,11 +4,11 @@
 - [x] Build passes clean, auth works, middleware protects dashboard
 
 ## PHASE 2: CLIENT MANAGEMENT
-- [ ] Landing page: hero, features (class scheduling, client profiles, payments, staff), vs Mindbody comparison
-- [ ] Client list: searchable, with tags (active/inactive/vip), membership status, last visit
-- [ ] Add/edit client: name, email, phone, emergency contact, medical notes, membership tier
-- [ ] Client profile: visit history, class attendance, payment history, notes timeline
-- [ ] Membership plans: create plans (monthly flat, per-class, drop-in), assign to clients
+- [x] Landing page: hero, features (class scheduling, client profiles, payments, staff), vs Mindbody comparison
+- [x] Client list: searchable, with tags (active/inactive/vip), membership status, last visit
+- [x] Add/edit client: name, email, phone, emergency contact, medical notes, membership tier
+- [x] Client profile: visit history, class attendance, payment history, notes timeline
+- [x] Membership plans: create plans (monthly flat, per-class, drop-in), assign to clients
 
 ## PHASE 3: CLASS SCHEDULING
 - [ ] Class types: create (yoga, spin, HIIT etc.) with duration, capacity, price
