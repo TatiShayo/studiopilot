@@ -39,5 +39,5 @@
 - [x] Automated birthday emails to clients
 - [x] Class series packages (10-class pack)
 - [x] AI class description generator
-- [ ] Retention alerts: flag clients who haven't visited in 30 days
-- [ ] Digital waiver signing: clients sign liability waiver online before first class
+- [x] Retention alerts: flag clients who haven't visited in 30 days
+- [x] Digital waiver signing: clients sign liability waiver online before first class

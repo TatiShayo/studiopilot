@@ -66,3 +66,9 @@
 [2026-05-30] Phase 7 Task 2: Class series packages — class_credits column, ClientClassCredits component, auto-deduct credits on booking
 
 [2026-05-30] Phase 7 Task 3: AI class description generator — server action with OpenAI GPT-4o-mini, AIDescriptionButton component in class types form
+
+[2026-05-30 13:41:43.334527] Session #3: 2 tasks left
+
+[2026-05-30] Phase 7 Task 4: Retention alerts — flag clients with no visits in 30+ days on dashboard with Send reminder email buttons, /api/clients/remind route
+
+[2026-05-30] Phase 7 Task 5: Digital waiver signing — waivers table, Waiver type, /waiver page, WaiverSignForm component, booking gate (must sign before booking)
