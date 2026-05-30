@@ -170,11 +170,33 @@ export default function BookPage() {
     if (!client) return;
     setBookingStates((prev) => ({ ...prev, [classId]: "loading" }));
 
+    const { data: booking } = await s
+      .from("bookings")
+      .select("status")
+      .eq("client_id", client.id)
+      .eq("scheduled_class_id", classId)
+      .maybeSingle();
+
     await s
       .from("bookings")
       .update({ status: "cancelled" })
       .eq("client_id", client.id)
       .eq("scheduled_class_id", classId);
+
+    const wasBookedOrCheckedIn = booking?.status === "booked" || booking?.status === "checked_in";
+    if (wasBookedOrCheckedIn) {
+      const { data: waitlisted } = await s
+        .from("bookings")
+        .select("id")
+        .eq("scheduled_class_id", classId)
+        .eq("status", "waitlisted")
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      if (waitlisted) {
+        await s.from("bookings").update({ status: "booked" }).eq("id", waitlisted.id);
+      }
+    }
 
     setBookingStates((prev) => {
       const next = { ...prev };

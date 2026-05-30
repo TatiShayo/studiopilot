@@ -2,11 +2,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { sendEmail } from "@/lib/email";
 
 async function promoteWaitlist(supabase: Awaited<ReturnType<typeof createClient>>, classId: string) {
   const { data: waitlisted } = await supabase
     .from("bookings")
-    .select("id, client_id")
+    .select("id, client_id, clients(email, name)")
     .eq("scheduled_class_id", classId)
     .eq("status", "waitlisted")
     .order("created_at", { ascending: true })
@@ -19,6 +20,15 @@ async function promoteWaitlist(supabase: Awaited<ReturnType<typeof createClient>
     .from("bookings")
     .update({ status: "booked" })
     .eq("id", waitlisted.id);
+
+  const clientData = (waitlisted as any).clients as { email: string; name: string } | null;
+  if (clientData?.email) {
+    await sendEmail({
+      to: clientData.email,
+      subject: "You're in! Spot opened up",
+      text: `Hi ${clientData.name}, a spot just opened up and you've been moved from the waitlist to confirmed. See you in class!`,
+    });
+  }
 }
 
 export async function bookClientIntoClass(formData: FormData) {
