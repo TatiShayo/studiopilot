@@ -121,7 +121,7 @@ export default function BookPage() {
 
     const { data: sc } = await s
       .from("scheduled_classes")
-      .select("start_time, class_types(capacity, name), staff(name)")
+      .select("start_time, end_time, class_types(capacity, name), staff(name)")
       .eq("id", classId)
       .single();
 
@@ -173,6 +173,8 @@ export default function BookPage() {
           time: format(new Date(sc.start_time), "h:mm a"),
           instructor: staffName,
           cancelUrl: `${window.location.origin}/book`,
+          calendarStartISO: sc.start_time,
+          calendarEndISO: sc.end_time,
         });
       }
       fetchClasses(client.id);

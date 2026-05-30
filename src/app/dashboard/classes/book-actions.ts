@@ -110,6 +110,8 @@ export async function bookClientIntoClass(formData: FormData) {
         time: startTime.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
         instructor: staffName,
         cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/dashboard/classes/${classId}`,
+        calendarStartISO: sc.start_time,
+        calendarEndISO: sc.end_time,
       });
     }
   }

@@ -60,7 +60,7 @@
 - [x] Booking confirmation email (Resend): sends to client immediately after booking — include class name, date, time, instructor, location, cancel link
 - [x] Class reminder email: 24 hours before class, send reminder to all booked clients
   Implement as: API route /api/cron/class-reminders that queries class_instances WHERE instance_date = tomorrow
-- [ ] Class cancellation flow: cancel button on class detail → emails ALL booked clients with apology + reschedule link
+- [x] Class cancellation flow: cancel button on class detail → emails ALL booked clients with apology + reschedule link
 - [ ] Add to Calendar link in booking confirmation: Google Calendar URL + .ics download
 
 ## PHASE 9: PAYMENT SYSTEM COMPLETION

@@ -119,7 +119,7 @@ export default function PortalPage() {
 
     const { data: sc } = await s
       .from("scheduled_classes")
-      .select("start_time, class_types(capacity, name), staff(name)")
+      .select("start_time, end_time, class_types(capacity, name), staff(name)")
       .eq("id", classId)
       .single();
 
@@ -169,6 +169,8 @@ export default function PortalPage() {
           time: format(new Date(sc.start_time), "h:mm a"),
           instructor: (sc as any).staff?.name,
           cancelUrl: `${window.location.origin}/portal`,
+          calendarStartISO: sc.start_time,
+          calendarEndISO: sc.end_time,
         });
       }
       fetchClasses(client.id);

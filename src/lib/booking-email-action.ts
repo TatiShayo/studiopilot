@@ -11,6 +11,8 @@ export async function sendBookingEmail(data: {
   instructor?: string;
   location?: string;
   cancelUrl?: string;
+  calendarStartISO?: string;
+  calendarEndISO?: string;
 }) {
   await sendBookingConfirmation(data);
 }

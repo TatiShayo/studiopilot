@@ -39,6 +39,8 @@ export async function sendEmail({
   }
 }
 
+import { buildCalendarLinks } from "@/lib/calendar";
+
 export async function sendBookingConfirmation({
   to,
   clientName,
@@ -48,6 +50,8 @@ export async function sendBookingConfirmation({
   instructor,
   location,
   cancelUrl,
+  calendarStartISO,
+  calendarEndISO,
 }: {
   to: string;
   clientName: string;
@@ -57,14 +61,29 @@ export async function sendBookingConfirmation({
   instructor?: string;
   location?: string;
   cancelUrl?: string;
+  calendarStartISO?: string;
+  calendarEndISO?: string;
 }) {
+  let calendarLine = "";
+
+  if (calendarStartISO && calendarEndISO) {
+    const links = buildCalendarLinks({
+      className,
+      startISO: calendarStartISO,
+      endISO: calendarEndISO,
+      instructor,
+      location,
+    });
+    calendarLine = `\nAdd to calendar: ${links.google}`;
+  }
+
   const text = `Hi ${clientName},
 
 You're booked!
 
 ${className}
 ${date} at ${time}${instructor ? ` with ${instructor}` : ""}${location ? ` at ${location}` : ""}
-
+${calendarLine}
 ${cancelUrl ? `Need to cancel? ${cancelUrl}` : ""}
 
 See you there!
