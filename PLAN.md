@@ -20,7 +20,7 @@
 
 ## PHASE 4: PAYMENTS
 - [x] Payment recording: log cash/card/M-Pesa payment per client
-- [ ] Membership billing: Stripe subscriptions for monthly members
+- [x] Membership billing: Stripe subscriptions for monthly members
 - [ ] Outstanding balance: flag clients with overdue payments
 - [ ] Revenue dashboard: daily/weekly/monthly revenue chart
 
