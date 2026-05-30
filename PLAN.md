@@ -22,7 +22,7 @@
 - [x] Payment recording: log cash/card/M-Pesa payment per client
 - [x] Membership billing: Stripe subscriptions for monthly members
 - [x] Outstanding balance: flag clients with overdue payments
-- [ ] Revenue dashboard: daily/weekly/monthly revenue chart
+- [x] Revenue dashboard: daily/weekly/monthly revenue chart
 
 ## PHASE 5: STAFF
 - [ ] Staff profiles: name, specialties, schedule

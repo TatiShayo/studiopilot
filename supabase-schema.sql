@@ -135,13 +135,26 @@ CREATE TABLE IF NOT EXISTS staff (
   created_at timestamptz DEFAULT now(),
   name text NOT NULL,
   email text UNIQUE NOT NULL,
+  phone text NOT NULL DEFAULT '',
   specialties text[] DEFAULT '{}',
+  bio text NOT NULL DEFAULT '',
   active boolean NOT NULL DEFAULT true
 );
 
 ALTER TABLE staff ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Studio owners can manage staff" ON staff
   FOR ALL USING (true);
+
+-- Add phone and bio columns to staff table if they don't exist (migration)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'staff' AND column_name = 'phone') THEN
+    ALTER TABLE staff ADD COLUMN phone text NOT NULL DEFAULT '';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'staff' AND column_name = 'bio') THEN
+    ALTER TABLE staff ADD COLUMN bio text NOT NULL DEFAULT '';
+  END IF;
+END $$;
 
 -- Recurring schedules (weekly class patterns)
 CREATE TABLE IF NOT EXISTS recurring_schedules (

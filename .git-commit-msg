@@ -1,3 +1,7 @@
-done: Task 3 — Revenue dashboard with 6-month chart + Today/Week/Month/Year cards
+done: Task 4 — Staff profiles at /dashboard/staff
+
+- Added phone and bio columns to staff table schema with migration
+- Updated Staff type with phone and bio fields
+- Created /dashboard/staff page with card grid, add/edit form, specialties chips, active toggle
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>

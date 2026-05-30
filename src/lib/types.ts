@@ -102,6 +102,8 @@ export interface Staff {
   created_at: string;
   name: string;
   email: string;
+  phone: string;
   specialties: string[];
+  bio: string;
   active: boolean;
 }
