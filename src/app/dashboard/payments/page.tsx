@@ -28,9 +28,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Search, Banknote, CreditCard, Smartphone, Building2 } from "lucide-react";
+import { Plus, Search, Banknote, CreditCard, Smartphone, Building2, Crown, Calendar } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
-import type { Client, Payment } from "@/lib/types";
+import type { Client, Payment, Membership } from "@/lib/types";
 import RevenueDashboard from "./revenue-dashboard";
 
 type PaymentWithClient = Payment & { clients: Pick<Client, "id" | "name" | "email"> | null };
@@ -55,6 +55,18 @@ export default function PaymentsPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null);
+
+  const [memberships, setMemberships] = useState<(Membership & { clients: Pick<Client, "id" | "name" | "email"> | null })[]>([]);
+  const [showMembershipForm, setShowMembershipForm] = useState(false);
+  const [memClientSearch, setMemClientSearch] = useState("");
+  const [memSearchResults, setMemSearchResults] = useState<Client[]>([]);
+  const [memSelectedClient, setMemSelectedClient] = useState<Client | null>(null);
+  const [memPlanName, setMemPlanName] = useState("");
+  const [memPrice, setMemPrice] = useState("");
+  const [memCycle, setMemCycle] = useState("monthly");
+  const [memStartDate, setMemStartDate] = useState(new Date().toISOString().split("T")[0]);
+  const [memSaving, setMemSaving] = useState(false);
+  const [memError, setMemError] = useState("");
   const getSupabase = () => {
     if (!supabaseRef.current) supabaseRef.current = createClient();
     return supabaseRef.current;
@@ -71,9 +83,19 @@ export default function PaymentsPage() {
     setLoading(false);
   };
 
+  const fetchMemberships = async () => {
+    const supabase = getSupabase();
+    const { data } = await supabase
+      .from("memberships")
+      .select("*, clients(id, name, email)")
+      .order("created_at", { ascending: false });
+    setMemberships((data as any[]) ?? []);
+  };
+
   useEffect(() => {
     const initialize = async () => {
       await fetchPayments();
+      await fetchMemberships();
     };
     initialize();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,6 +118,24 @@ export default function PaymentsPage() {
     }, 300);
     return () => clearTimeout(timer);
   }, [clientSearch]);
+
+  useEffect(() => {
+    if (memClientSearch.length < 2) {
+      setMemSearchResults([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      const supabase = getSupabase();
+      const { data } = await supabase
+        .from("clients")
+        .select("*")
+        .or(`name.ilike.%${memClientSearch}%,email.ilike.%${memClientSearch}%`)
+        .order("name")
+        .limit(8);
+      setMemSearchResults((data as Client[]) ?? []);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [memClientSearch]);
 
   const handleSelectClient = (c: Client) => {
     setSelectedClient(c);
@@ -131,6 +171,59 @@ export default function PaymentsPage() {
       fetchPayments();
     }
     setSaving(false);
+  };
+
+  const handleSelectMemClient = (c: Client) => {
+    setMemSelectedClient(c);
+    setMemClientSearch(c.name);
+    setMemSearchResults([]);
+  };
+
+  const handleAddMembership = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!memSelectedClient || !memPlanName || !memPrice) return;
+    setMemSaving(true);
+    setMemError("");
+
+    let endDate: string | null = null;
+    const start = new Date(memStartDate);
+    if (memCycle === "monthly") {
+      endDate = new Date(start.setMonth(start.getMonth() + 1)).toISOString().split("T")[0];
+    } else if (memCycle === "quarterly") {
+      endDate = new Date(start.setMonth(start.getMonth() + 3)).toISOString().split("T")[0];
+    } else {
+      endDate = new Date(start.setFullYear(start.getFullYear() + 1)).toISOString().split("T")[0];
+    }
+
+    const supabase = getSupabase();
+    const { error: insertError } = await supabase.from("memberships").insert({
+      client_id: memSelectedClient.id,
+      plan_name: memPlanName,
+      price: Math.round(parseFloat(memPrice) * 100),
+      billing_cycle: memCycle,
+      start_date: memStartDate,
+      end_date: endDate,
+      status: "active",
+    });
+
+    if (insertError) {
+      setMemError(insertError.message);
+    } else {
+      await supabase
+        .from("clients")
+        .update({ membership_tier: "monthly", status: "active" })
+        .eq("id", memSelectedClient.id);
+
+      setMemSelectedClient(null);
+      setMemClientSearch("");
+      setMemPlanName("");
+      setMemPrice("");
+      setMemCycle("monthly");
+      setMemStartDate(new Date().toISOString().split("T")[0]);
+      setShowMembershipForm(false);
+      fetchMemberships();
+    }
+    setMemSaving(false);
   };
 
   const methodBadge = (m: string) => {
@@ -208,6 +301,7 @@ export default function PaymentsPage() {
         <div className="flex items-center justify-between mb-6">
           <TabsList>
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
+            <TabsTrigger value="memberships">Memberships</TabsTrigger>
             <TabsTrigger value="revenue">Revenue Dashboard</TabsTrigger>
           </TabsList>
         </div>
@@ -398,6 +492,219 @@ export default function PaymentsPage() {
 
         <TabsContent value="revenue">
           <RevenueDashboard />
+        </TabsContent>
+
+        <TabsContent value="memberships" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Active Memberships</h2>
+            <Button size="sm" onClick={() => setShowMembershipForm(!showMembershipForm)}>
+              <Crown className="size-4" /> Add Membership
+            </Button>
+          </div>
+
+          {showMembershipForm && (
+            <Card className="max-w-lg">
+              <CardHeader>
+                <CardTitle>Add Membership</CardTitle>
+                <CardDescription>
+                  Manually add a membership plan for a client.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleAddMembership} className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
+                    <Label>Client</Label>
+                    {memSelectedClient ? (
+                      <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                        <span className="text-sm">
+                          {memSelectedClient.name} ({memSelectedClient.email})
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          type="button"
+                          onClick={() => {
+                            setMemSelectedClient(null);
+                            setMemClientSearch("");
+                          }}
+                        >
+                          Change
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Search clients..."
+                          className="pl-8"
+                          value={memClientSearch}
+                          onChange={(e) => setMemClientSearch(e.target.value)}
+                        />
+                        {memSearchResults.length > 0 && (
+                          <div className="absolute z-10 mt-1 w-full rounded-md border bg-card shadow-lg">
+                            {memSearchResults.map((c) => (
+                              <button
+                                key={c.id}
+                                type="button"
+                                className="w-full px-3 py-2 text-sm text-left hover:bg-muted"
+                                onClick={() => handleSelectMemClient(c)}
+                              >
+                                {c.name}{" "}
+                                <span className="text-muted-foreground">
+                                  ({c.email})
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="planName">Plan Name</Label>
+                    <Input
+                      id="planName"
+                      value={memPlanName}
+                      onChange={(e) => setMemPlanName(e.target.value)}
+                      placeholder="Unlimited Monthly"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="memPrice">Price (KES)</Label>
+                      <Input
+                        id="memPrice"
+                        type="number"
+                        placeholder="0.00"
+                        value={memPrice}
+                        onChange={(e) => setMemPrice(e.target.value)}
+                        min="0"
+                        step="0.01"
+                        required
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <Label>Billing Cycle</Label>
+                      <Select
+                        value={memCycle}
+                        onValueChange={(v) => setMemCycle(v ?? "monthly")}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="monthly">Monthly</SelectItem>
+                          <SelectItem value="quarterly">Quarterly</SelectItem>
+                          <SelectItem value="yearly">Yearly</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <Label htmlFor="memStartDate">Start Date</Label>
+                    <Input
+                      id="memStartDate"
+                      type="date"
+                      value={memStartDate}
+                      onChange={(e) => setMemStartDate(e.target.value)}
+                    />
+                  </div>
+
+                  {memError && <p className="text-sm text-destructive">{memError}</p>}
+
+                  <div className="flex gap-2">
+                    <Button
+                      type="submit"
+                      disabled={memSaving || !memSelectedClient || !memPlanName || !memPrice}
+                    >
+                      {memSaving ? "Adding..." : "Add Membership"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      type="button"
+                      onClick={() => setShowMembershipForm(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
+
+          <Card>
+            <CardContent className="p-0">
+              {memberships.length === 0 ? (
+                <p className="p-6 text-sm text-muted-foreground text-center">
+                  No memberships yet. Add one above or subscribe a client via Stripe.
+                </p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Plan</TableHead>
+                      <TableHead>Cycle</TableHead>
+                      <TableHead>Start Date</TableHead>
+                      <TableHead>End Date</TableHead>
+                      <TableHead className="text-right">Price</TableHead>
+                      <TableHead>Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {memberships.map((m) => (
+                      <TableRow key={m.id}>
+                        <TableCell className="font-medium">
+                          {m.clients?.name ?? "Unknown"}
+                        </TableCell>
+                        <TableCell>{m.plan_name}</TableCell>
+                        <TableCell className="capitalize">{m.billing_cycle}</TableCell>
+                        <TableCell className="text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="size-3" />
+                            {new Date(m.start_date).toLocaleDateString("en-KE", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {m.end_date
+                            ? new Date(m.end_date).toLocaleDateString("en-KE", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              })
+                            : "—"}
+                        </TableCell>
+                        <TableCell className="text-right font-bold">
+                          {kesFormatter.format(m.price / 100)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              m.status === "active"
+                                ? "default"
+                                : m.status === "past_due"
+                                ? "destructive"
+                                : "outline"
+                            }
+                          >
+                            {m.status.replace("_", " ")}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>

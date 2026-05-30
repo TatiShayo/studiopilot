@@ -111,6 +111,24 @@ ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Studio owners can manage payments" ON payments
   FOR ALL USING (true);
 
+-- Memberships (Stripe subscriptions + manual)
+CREATE TABLE IF NOT EXISTS memberships (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  client_id uuid NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  plan_name text NOT NULL,
+  price integer NOT NULL DEFAULT 0,
+  billing_cycle text NOT NULL CHECK (billing_cycle IN ('monthly', 'quarterly', 'yearly')),
+  start_date date NOT NULL DEFAULT CURRENT_DATE,
+  end_date date,
+  stripe_subscription_id text,
+  status text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'canceled', 'expired', 'past_due'))
+);
+
+ALTER TABLE memberships ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Studio owners can manage memberships" ON memberships
+  FOR ALL USING (true);
+
 -- Staff
 CREATE TABLE IF NOT EXISTS staff (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

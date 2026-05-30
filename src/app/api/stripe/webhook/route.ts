@@ -35,15 +35,15 @@ export async function POST(request: NextRequest) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
 
-      let clientId = session.metadata?.client_id;
-      let planId = session.metadata?.plan_id;
+      let clientId = (session as any).metadata?.client_id;
+      let planId = (session as any).metadata?.plan_id;
 
       if (!clientId && session.subscription) {
-        const sub = await stripe.subscriptions.retrieve(
+        const subData = await stripe.subscriptions.retrieve(
           session.subscription as string,
-        );
-        clientId = sub.metadata.client_id;
-        planId = sub.metadata.plan_id;
+        ) as any;
+        clientId = subData.metadata?.client_id;
+        planId = subData.metadata?.plan_id;
       }
 
       if (clientId && planId) {
@@ -62,6 +62,58 @@ export async function POST(request: NextRequest) {
             status: "active",
           })
           .eq("id", clientId);
+
+        const { data: plan } = await supabase
+          .from("membership_plans")
+          .select("name, price_cents")
+          .eq("id", planId)
+          .single();
+
+        const stripeSubData = session.subscription
+          ? await stripe.subscriptions.retrieve(session.subscription as string)
+          : null;
+        const currentPeriodEnd = (stripeSubData as any)?.current_period_end
+          ? new Date((stripeSubData as any).current_period_end * 1000).toISOString().split("T")[0]
+          : null;
+
+        await supabase.from("memberships").insert({
+          client_id: clientId,
+          plan_name: plan?.name ?? "Monthly Plan",
+          price: plan?.price_cents ?? 0,
+          billing_cycle: "monthly",
+          start_date: new Date().toISOString().split("T")[0],
+          end_date: currentPeriodEnd,
+          stripe_subscription_id: session.subscription as string,
+          status: "active",
+        });
+      }
+      break;
+    }
+
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
+      const subData = subscription as any;
+      const clientId = subData.metadata?.client_id;
+
+      if (clientId) {
+        const currentPeriodEnd = subData.current_period_end
+          ? new Date(subData.current_period_end * 1000).toISOString().split("T")[0]
+          : null;
+
+        const status =
+          subData.status === "active"
+            ? "active"
+            : subData.status === "past_due"
+            ? "past_due"
+            : "canceled";
+
+        await supabase
+          .from("memberships")
+          .update({
+            status,
+            end_date: currentPeriodEnd,
+          })
+          .eq("stripe_subscription_id", subscription.id);
       }
       break;
     }
@@ -71,14 +123,19 @@ export async function POST(request: NextRequest) {
       const subscriptionId = (invoice as any).subscription as string | undefined;
 
       if (subscriptionId) {
-        const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-        const clientId = subscription.metadata.client_id;
+        const subscriptionData = await stripe.subscriptions.retrieve(subscriptionId) as any;
+        const clientId = subscriptionData.metadata?.client_id;
 
         if (clientId) {
           await supabase
             .from("clients")
             .update({ status: "inactive" })
             .eq("id", clientId);
+
+          await supabase
+            .from("memberships")
+            .update({ status: "past_due" })
+            .eq("stripe_subscription_id", subscriptionId);
         }
       }
       break;
@@ -86,7 +143,8 @@ export async function POST(request: NextRequest) {
 
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
-      const { client_id } = subscription.metadata ?? {};
+      const subData = subscription as any;
+      const client_id = subData.metadata?.client_id;
 
       if (client_id) {
         await supabase
@@ -96,6 +154,11 @@ export async function POST(request: NextRequest) {
             membership_tier: "drop_in",
           })
           .eq("id", client_id);
+
+        await supabase
+          .from("memberships")
+          .update({ status: "canceled" })
+          .eq("stripe_subscription_id", subscription.id);
       }
       break;
     }

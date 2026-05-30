@@ -84,6 +84,19 @@ export interface Payment {
   paid_at: string;
 }
 
+export interface Membership {
+  id: string;
+  created_at: string;
+  client_id: string;
+  plan_name: string;
+  price: number;
+  billing_cycle: "monthly" | "quarterly" | "yearly";
+  start_date: string;
+  end_date: string | null;
+  stripe_subscription_id: string | null;
+  status: "active" | "canceled" | "expired" | "past_due";
+}
+
 export interface Staff {
   id: string;
   created_at: string;

@@ -1,65 +1,55 @@
-You are a senior fullstack engineer finishing StudioPilot — a gym/yoga/salon studio management SaaS for East Africa.
+You are continuing StudioPilot. Payment recording page is built. 15 tasks remain.
 
 ═══ CURRENT STATE ═══
-12 of 28 tasks done. In PHASE 4: PAYMENTS.
-16 tasks remaining. Schedule view, class types, clients, check-in, and payments are partially built. Need payment recording, membership billing, revenue dashboard, staff management, testing, and polish.
+13 of 28 tasks done. 15 remaining.
+PHASE 4: PAYMENTS — 3 tasks left
+PHASE 5: STAFF — 3 tasks
+PHASE 6: TESTING & POLISH — 3 tasks
+PHASE 7: ADVANCED — 6 tasks
 
-═══ REMAINING TASKS (build in this order) ═══
+═══ REMAINING TASKS (build in order) ═══
 
-Task 1: Payment recording at /dashboard/payments
-- Form: client selector (dropdown from clients table), amount, currency (KES default), method (Cash/M-Pesa/Card/Bank), description text field, date picker
-- Insert into payments table on submit
-- Show recent transactions table below: date, client, amount, method, description
-- Running total: "Total Revenue This Month: KES X" card at top
+Task 1: Membership billing — Stripe subscriptions for monthly members
+- Create memberships table if not exists: id, client_id, plan_name, price, billing_cycle, start_date, end_date, stripe_subscription_id, status
+- Create /api/stripe/checkout route: POST {priceId, clientId} → creates Stripe Checkout Session
+- Create /api/webhooks/stripe route: handle checkout.session.completed, subscription.updated/deleted
+- Add "Add Membership" button on /dashboard/payments: client selector, plan name, price, billing cycle (Monthly/Quarterly/Yearly), start date
+- Memberships tab on payments page: list active memberships, status badges, renewal dates
+- Note: in .env.local, STRIPE_SECRET_KEY may be empty — guard the route so build passes (if (!process.env.STRIPE_SECRET_KEY) return NextResponse.json({error: 'not configured'}))
 
-Task 2: Membership billing
-- Memberships tab on /dashboard/payments: list of all active memberships, client name, plan_name, price, start/end dates, status badge
-- Create memberships table if missing: id, client_id, plan_name, price, billing_cycle, start_date, end_date, stripe_subscription_id, status
-- "Add Membership" button: client selector, plan name, price, billing cycle (Monthly/Quarterly/Yearly), start date
-- Stripe subscription integration: create /api/stripe/checkout with price IDs, webhook for subscription events
+Task 2: Outstanding balance — flag clients with overdue payments
+- Query: for each client with memberships that have past end_date but status='active', flag as overdue
+- Dashboard card: "X clients with overdue payments" with list, "Send Reminder" button per client
+- Client detail page: shows outstanding balance, payment history
 
-Task 3: Revenue dashboard
-- /dashboard/payments gets chart section: bar chart (recharts) showing revenue by month for last 6 months
-- Cards: Today's Revenue, This Week, This Month, This Year (all calculated from payments table)
-- Currency format: new Intl.NumberFormat('en-KE', {style:'currency', currency:'KES'})
+Task 3: Revenue dashboard at /dashboard/payments
+- Add chart section: recharts bar chart showing revenue by month (last 6 months)
+- Cards: Today's Revenue, This Week, This Month, This Year (queried from payments table)
+- Format: new Intl.NumberFormat('en-KE', {style:'currency', currency:'KES'})
 
-Task 4: Staff management at /dashboard/staff
-- Staff cards grid: photo/initials, full_name, specialties badges, active/inactive toggle
-- Add/edit staff: name, email, phone, specialties (multi-select chips), bio textarea
-- Staff schedule view: list of classes they're assigned to this week
-- Hours log: record worked hours per staff member (date, hours, rate, notes)
+Task 4: Staff profiles at /dashboard/staff
+- Grid of staff cards: photo/initials, name, specialties badges, active/inactive toggle
+- Add/Edit staff: name, email, phone, specialties (multi-select chips), bio textarea
+- Staff schedule: list of classes they're assigned to this week
 
 Task 5: Staff assignment to classes
 - When creating/editing class schedule, add instructor_id dropdown (from staff table)
 - Class detail page shows instructor name and photo
 - Filter schedule by instructor
 
-Task 6: Testing & polish
-- Unit test for booking logic: test that you can't double-book a client, capacity is enforced, waitlist works
-- Mobile responsive: all dashboard pages must work at 375px width (use tailwind responsive classes)
-- Lighthouse audit: fix to ≥85 performance/accessibility/best-practices
+Task 6: Staff hours log
+- Record worked hours: date, hours, rate, notes per staff member
+- Table on staff detail page showing hours worked this month
 
-Task 7: Additional features
-- AI class description generator at /api/ai/class-description: input className, duration, level → output engaging 2-3 sentence description
-- Retention alerts: query clients who haven't booked in 30+ days, show in dashboard card with "Send Reminder" buttons
-- Birthday automation: check clients whose birthday is today, send automated email via Resend
-- Class series packages: "10-class pack" membership type with expiry date
-
-Task 8: Digital waiver signing
-- Waiver page at /waiver/[clientId]: liability waiver text, "I agree" signature (type name as signature)
-- Store signed_at timestamp on clients table
-
-═══ DESIGN ═══
-Dark theme: bg #09100f, surface #111a19, border #1a2e2b, teal accent #14b8a6.
-Class colors: stored per class_type (teal, orange, purple, blue, pink, red).
-Client status: green dot=active, yellow=at risk, gray=inactive.
-All amounts in KES format. /dashboard uses sidebar nav.
+Task 7: Testing & polish
+- Unit test: booking logic (no double-book, capacity, waitlist)
+- Mobile responsive: all pages work at 375px
+- Lighthouse ≥85
 
 ═══ RULES ═══
-npm run build after every task — must pass. Fix all tsc errors.
+npm run build after every task. Must pass.
 git add -A && git commit -m "done: [task]" per task.
-Mark [x] in PLAN.md + append to PROGRESS.md.
-Skip any task that fails twice, write to LEARNINGS.md, move on.
-No questions. Keep building.
+Mark [x] in PLAN.md + PROGRESS.md.
+Skip after 2 failures. Keep building.
 
-Start with Task 1: Payment recording page.
+Start with Task 1: Membership billing with Stripe subscriptions.
