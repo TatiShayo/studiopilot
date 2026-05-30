@@ -1,6 +1,29 @@
 -- StudioPilot Database Schema
 -- Run this in Supabase SQL Editor to set up your tables
 
+-- Studios table (multi-tenant foundation)
+CREATE TABLE IF NOT EXISTS studios (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  slug text UNIQUE NOT NULL,
+  name text NOT NULL,
+  logo_url text,
+  branding_color text DEFAULT '#14b8a6',
+  subdomain text UNIQUE
+);
+
+ALTER TABLE studios ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can read studios" ON studios
+  FOR SELECT USING (true);
+CREATE POLICY "Studio owners can manage their studio" ON studios
+  FOR ALL USING (true);
+
+INSERT INTO studios (slug, name, branding_color) VALUES
+  ('amani-wellness', 'Amani Wellness Studio', '#14b8a6'),
+  ('nairobi-yoga', 'Nairobi Yoga Center', '#a855f7'),
+  ('coast-crossfit', 'Coast CrossFit', '#f97316')
+ON CONFLICT (slug) DO NOTHING;
+
 -- Clients table
 CREATE TABLE IF NOT EXISTS clients (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

@@ -1,5 +1,15 @@
 export type MembershipTier = "monthly" | "per_class" | "drop_in";
 
+export interface Studio {
+  id: string;
+  created_at: string;
+  slug: string;
+  name: string;
+  logo_url: string | null;
+  branding_color: string;
+  subdomain: string | null;
+}
+
 export interface Client {
   id: string;
   created_at: string;

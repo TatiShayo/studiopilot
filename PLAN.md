@@ -55,7 +55,7 @@
 - [x] Add Open Graph tags to landing page
 
 ## PHASE 8: CLASS BOOKING ENGINE COMPLETION
-- [ ] Public client portal /portal/[studioSlug]: finish and test full booking flow end-to-end
+- [x] Public client portal /portal/[studioSlug]: finish and test full booking flow end-to-end
 - [ ] Waitlist promotion: when a booking is cancelled, auto-promote first waitlisted client and send email
 - [ ] Booking confirmation email (Resend): sends to client immediately after booking — include class name, date, time, instructor, location, cancel link
 - [ ] Class reminder email: 24 hours before class, send reminder to all booked clients

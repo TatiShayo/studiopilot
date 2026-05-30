@@ -90,3 +90,5 @@
 [2026-05-30 21:02:42.237618] Session #5: 69 tasks left
 
 [2026-05-30 21:10:13.626161] Session #6: 67 tasks left
+
+[2026-05-30] Phase 7 Task 6 (Mobile audit): Fixed all pages at 375px — schedule items wrap, upcoming classes compact, class detail header reflow + table scroll, check-in buttons 44px touch targets, clients/payments/staff tables horizontal scroll, OG tags already in layout.tsx
