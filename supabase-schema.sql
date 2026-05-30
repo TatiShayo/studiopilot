@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS clients (
   membership_plan_id uuid,
   status text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'vip')),
   tags text[] DEFAULT '{}',
-  last_visit timestamptz
+  last_visit timestamptz,
+  birth_date date
 );
 
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;

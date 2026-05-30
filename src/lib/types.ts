@@ -13,6 +13,7 @@ export interface Client {
   status: "active" | "inactive" | "vip";
   tags: string[];
   last_visit: string | null;
+  birth_date: string | null;
 }
 
 export interface MembershipPlan {

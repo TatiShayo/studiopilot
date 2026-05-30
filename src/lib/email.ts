@@ -1,6 +1,18 @@
-import { Resend } from "resend";
+let resend: any = null;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+function getResend() {
+  if (!resend) {
+    try {
+      const { Resend } = require("resend");
+      if (process.env.RESEND_API_KEY) {
+        resend = new Resend(process.env.RESEND_API_KEY);
+      }
+    } catch {
+      // resend not available
+    }
+  }
+  return resend;
+}
 
 export async function sendEmail({
   to,
@@ -11,11 +23,12 @@ export async function sendEmail({
   subject: string;
   text: string;
 }) {
-  if (!process.env.RESEND_API_KEY) {
+  const client = getResend();
+  if (!client) {
     console.warn("RESEND_API_KEY not set — skipping email to", to);
     return;
   }
-  const { error } = await resend.emails.send({
+  const { error } = await client.emails.send({
     from: "StudioPilot <onboarding@resend.dev>",
     to,
     subject,

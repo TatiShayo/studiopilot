@@ -30,6 +30,7 @@ export default function NewClientPage() {
   const [medicalNotes, setMedicalNotes] = useState("");
   const [membershipTier, setMembershipTier] = useState("drop_in");
   const [status, setStatus] = useState("active");
+  const [birthDate, setBirthDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -55,6 +56,7 @@ export default function NewClientPage() {
       membership_tier: membershipTier,
       status,
       tags: [],
+      birth_date: birthDate || null,
     });
 
     if (insertError) {
@@ -146,6 +148,15 @@ export default function NewClientPage() {
                   <SelectItem value="vip">VIP</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="birthdate">Birthday</Label>
+              <Input
+                id="birthdate"
+                type="date"
+                value={birthDate}
+                onChange={(e) => setBirthDate(e.target.value)}
+              />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="medical">Medical Notes</Label>

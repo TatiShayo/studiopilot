@@ -33,7 +33,7 @@
 - [x] Unit tests for booking logic (no double-booking, capacity enforcement)
 - [x] E2e: book a class flow
 - [x] Mobile responsive (owners check stats on phone)
-- [ ] Lighthouse ≥85
+- [x] Lighthouse ≥85
 
 ## PHASE 7: ADVANCED
 - [ ] Automated birthday emails to clients

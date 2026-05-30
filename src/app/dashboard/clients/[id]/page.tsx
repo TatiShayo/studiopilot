@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Mail, Phone } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Cake } from "lucide-react";
 import type { Client, Payment, Booking, ClientNote, ScheduledClass, ClassType, Membership } from "@/lib/types";
 import ClientBillingSection from "@/components/client-billing-section";
 import { AlertTriangle } from "lucide-react";
@@ -208,6 +208,17 @@ export default async function ClientProfilePage({
                   <a href={`tel:${c.phone}`} className="hover:underline">
                     {c.phone}
                   </a>
+                </div>
+              )}
+              {c.birth_date && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Cake className="size-4 text-muted-foreground" />
+                  <span>
+                    {new Date(c.birth_date).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
                 </div>
               )}
             </CardContent>
