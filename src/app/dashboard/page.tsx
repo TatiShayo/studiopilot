@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Users, Calendar, CreditCard, TrendingUp, ArrowRight } from "lucide-react";
 import { startOfDay, endOfDay } from "date-fns";
+import { RetentionAlerts } from "@/components/retention-alerts";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -98,6 +99,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <RetentionAlerts />
     </div>
   );
 }

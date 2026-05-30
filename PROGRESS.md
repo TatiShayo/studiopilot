@@ -63,4 +63,6 @@
 
 [2026-05-30] Phase 7 Task 1: Automated birthday emails — birth_date column, new client form field, client profile display, /api/cron/birthday-emails endpoint
 
-[2026-05-30] Phase 7 Task 2: Class series packages — class_credits column, ClientClassCredits component (5/10/20 packs + custom), auto-deduct credits on booking, credit display on book page
+[2026-05-30] Phase 7 Task 2: Class series packages — class_credits column, ClientClassCredits component, auto-deduct credits on booking
+
+[2026-05-30] Phase 7 Task 3: AI class description generator — server action with OpenAI GPT-4o-mini, AIDescriptionButton component in class types form
