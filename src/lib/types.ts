@@ -79,8 +79,9 @@ export interface Payment {
   created_at: string;
   client_id: string;
   amount_cents: number;
-  method: "cash" | "card" | "mpesa" | "stripe";
+  method: "cash" | "card" | "mpesa" | "stripe" | "bank";
   description: string;
+  paid_at: string;
 }
 
 export interface Staff {

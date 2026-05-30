@@ -12,6 +12,12 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Mail, Phone } from "lucide-react";
 import type { Client, Payment, Booking, ClientNote, ScheduledClass, ClassType } from "@/lib/types";
+import ClientBillingSection from "@/components/client-billing-section";
+
+const kesFormatter = new Intl.NumberFormat("en-KE", {
+  style: "currency",
+  currency: "KES",
+});
 
 export default async function ClientProfilePage({
   params,
@@ -140,7 +146,7 @@ export default async function ClientProfilePage({
                         </p>
                       </div>
                       <span className="font-bold">
-                        ${(p.amount_cents / 100).toFixed(2)}
+                        {kesFormatter.format(p.amount_cents / 100)}
                       </span>
                     </div>
                   ))}
@@ -217,6 +223,8 @@ export default async function ClientProfilePage({
             </Card>
           )}
 
+          <ClientBillingSection clientId={c.id} />
+
           <Card>
             <CardHeader>
               <CardTitle className="text-sm">Stats</CardTitle>
@@ -237,11 +245,12 @@ export default async function ClientProfilePage({
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Paid</span>
                 <span>
-                  $
-                  {((payments as Payment[] | null)?.reduce(
-                    (sum, p) => sum + p.amount_cents,
-                    0
-                  ) ?? 0) / 100}
+                  {kesFormatter.format(
+                    ((payments as Payment[] | null)?.reduce(
+                      (sum, p) => sum + p.amount_cents,
+                      0
+                    ) ?? 0) / 100
+                  )}
                 </span>
               </div>
             </CardContent>

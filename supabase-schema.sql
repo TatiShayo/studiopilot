@@ -102,8 +102,9 @@ CREATE TABLE IF NOT EXISTS payments (
   created_at timestamptz DEFAULT now(),
   client_id uuid NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
   amount_cents integer NOT NULL,
-  method text NOT NULL CHECK (method IN ('cash', 'card', 'mpesa', 'stripe')),
-  description text NOT NULL DEFAULT ''
+  method text NOT NULL CHECK (method IN ('cash', 'card', 'mpesa', 'stripe', 'bank')),
+  description text NOT NULL DEFAULT '',
+  paid_at timestamptz DEFAULT now()
 );
 
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;

@@ -19,7 +19,7 @@
 - [x] Class cancellation: notify booked clients via email
 
 ## PHASE 4: PAYMENTS
-- [ ] Payment recording: log cash/card/M-Pesa payment per client
+- [x] Payment recording: log cash/card/M-Pesa payment per client
 - [ ] Membership billing: Stripe subscriptions for monthly members
 - [ ] Outstanding balance: flag clients with overdue payments
 - [ ] Revenue dashboard: daily/weekly/monthly revenue chart
