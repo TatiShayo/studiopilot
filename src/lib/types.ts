@@ -105,5 +105,6 @@ export interface Staff {
   phone: string;
   specialties: string[];
   bio: string;
+  photo_url: string | null;
   active: boolean;
 }

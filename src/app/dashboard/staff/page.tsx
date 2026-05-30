@@ -21,6 +21,7 @@ export default function StaffPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [bio, setBio] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
   const [specialtyInput, setSpecialtyInput] = useState("");
   const [specialties, setSpecialties] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
@@ -48,6 +49,7 @@ export default function StaffPage() {
     setEmail("");
     setPhone("");
     setBio("");
+    setPhotoUrl("");
     setSpecialties([]);
     setSpecialtyInput("");
     setEditingId(null);
@@ -60,6 +62,7 @@ export default function StaffPage() {
     setEmail(s.email);
     setPhone(s.phone ?? "");
     setBio(s.bio ?? "");
+    setPhotoUrl(s.photo_url ?? "");
     setSpecialties(s.specialties ?? []);
     setShowForm(true);
   };
@@ -83,7 +86,7 @@ export default function StaffPage() {
     setError("");
 
     const supabase = getSupabase();
-    const payload = { name, email, phone, bio, specialties };
+    const payload = { name, email, phone, bio, photo_url: photoUrl || null, specialties };
 
     if (editingId) {
       const { error: updateErr } = await supabase
@@ -189,6 +192,15 @@ export default function StaffPage() {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
+                <Label htmlFor="staffPhotoUrl">Photo URL (optional)</Label>
+                <Input
+                  id="staffPhotoUrl"
+                  value={photoUrl}
+                  onChange={(e) => setPhotoUrl(e.target.value)}
+                  placeholder="https://example.com/photo.jpg"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
                 <Label>Specialties</Label>
                 <div className="flex items-center gap-2">
                   <Input
@@ -282,9 +294,17 @@ export default function StaffPage() {
             <Card key={s.id} className={!s.active ? "opacity-60" : ""}>
               <CardHeader className="flex flex-row items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold">
-                    {getInitials(s.name)}
-                  </div>
+                  {s.photo_url ? (
+                    <img
+                      src={s.photo_url}
+                      alt={s.name}
+                      className="size-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold">
+                      {getInitials(s.name)}
+                    </div>
+                  )}
                   <div>
                     <CardTitle className="text-base">{s.name}</CardTitle>
                     <CardDescription>{s.email}</CardDescription>

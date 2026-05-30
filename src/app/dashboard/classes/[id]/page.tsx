@@ -98,8 +98,12 @@ export default async function ClassDetailPage({
               {booked.length}/{capacity} booked
             </span>
             {staff && (
-              <span className="flex items-center gap-1">
-                <User className="size-3.5" />
+              <span className="flex items-center gap-1.5">
+                {staff.photo_url ? (
+                  <img src={staff.photo_url} alt={staff.name} className="size-4 rounded-full object-cover" />
+                ) : (
+                  <User className="size-3.5" />
+                )}
                 {staff.name}
               </span>
             )}

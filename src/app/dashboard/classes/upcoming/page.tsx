@@ -9,26 +9,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowLeft, Clock, Users, User, RefreshCw } from "lucide-react";
-import { addDays, startOfDay, setHours, setMinutes, format } from "date-fns";
+import { ArrowLeft, Clock, Users, User } from "lucide-react";
+import { addDays, startOfDay, format } from "date-fns";
 import { GenerateButton } from "./generate-button";
+import { InstructorFilter } from "./instructor-filter";
 
-export default async function UpcomingClassesPage() {
+export default async function UpcomingClassesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ instructor?: string }>;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/auth/login");
 
+  const { instructor } = await searchParams;
+
   const today = startOfDay(new Date());
   const weekEnd = addDays(today, 7);
 
-  const { data: scheduledClasses } = await supabase
+  const { data: staffList } = await supabase
+    .from("staff")
+    .select("id, name")
+    .eq("active", true)
+    .order("name");
+
+  let query = supabase
     .from("scheduled_classes")
     .select("*, class_types(*), staff(*), bookings(count)")
     .gte("start_time", today.toISOString())
-    .lt("start_time", weekEnd.toISOString())
-    .order("start_time");
+    .lt("start_time", weekEnd.toISOString());
+
+  if (instructor && instructor !== "all") {
+    query = query.eq("staff_id", instructor);
+  }
+
+  const { data: scheduledClasses } = await query.order("start_time");
 
   const statusVariant = (s: string) =>
     s === "scheduled" ? "default" : s === "completed" ? "secondary" : "destructive";
@@ -49,7 +67,10 @@ export default async function UpcomingClassesPage() {
             </p>
           </div>
         </div>
-        <GenerateButton />
+        <div className="flex items-center gap-2">
+          <InstructorFilter staffList={staffList ?? []} selected={instructor ?? "all"} />
+          <GenerateButton />
+        </div>
       </div>
 
       {(!scheduledClasses || scheduledClasses.length === 0) ? (
@@ -110,7 +131,11 @@ export default async function UpcomingClassesPage() {
                             </span>
                             {sc.staff && (
                               <span className="flex items-center gap-1">
-                                <User className="size-3" />
+                                {sc.staff.photo_url ? (
+                                  <img src={sc.staff.photo_url} alt={sc.staff.name} className="size-3 rounded-full object-cover" />
+                                ) : (
+                                  <User className="size-3" />
+                                )}
                                 {sc.staff.name}
                               </span>
                             )}
