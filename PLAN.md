@@ -68,7 +68,7 @@
 - [x] Membership billing: when client signs up for monthly membership → create Stripe Subscription → webhook updates memberships table
 - [x] Failed payment handling: webhook on invoice.payment_failed → mark membership as overdue → alert in dashboard
 - [x] M-Pesa payment recording: manual entry with phone number field, transaction reference — store payment_method='mpesa' in payments table
-- [ ] Receipt generation: "Send Receipt" button on any payment → generates PDF receipt via react-pdf → emails to client
+- [x] Receipt generation: "Send Receipt" button on any payment → generates PDF receipt via react-pdf → emails to client
 - [ ] Outstanding balance report: PDF of all clients with unpaid dues — print-ready for collections
 
 ## PHASE 10: CLIENT RETENTION SYSTEM

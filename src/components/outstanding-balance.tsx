@@ -4,9 +4,10 @@ import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, ExternalLink, Bell } from "lucide-react";
+import { AlertTriangle, ExternalLink, Bell, FileDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { format } from "date-fns";
 import { formatKes } from "@/lib/format-currency";
 import type { Client, Payment, Membership } from "@/lib/types";
@@ -21,6 +22,7 @@ interface OverdueClient {
 export default function OutstandingBalance() {
   const [overdue, setOverdue] = useState<OverdueClient[]>([]);
   const [loading, setLoading] = useState(true);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const fetchOutstanding = async () => {
@@ -86,16 +88,56 @@ export default function OutstandingBalance() {
     fetchOutstanding();
   }, []);
 
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      const res = await fetch("/api/payments/outstanding-report", { method: "POST" });
+      const json = await res.json();
+      if (json.pdf) {
+        const byteChars = atob(json.pdf);
+        const byteNums = new Array(byteChars.length);
+        for (let i = 0; i < byteChars.length; i++) {
+          byteNums[i] = byteChars.charCodeAt(i);
+        }
+        const blob = new Blob([new Uint8Array(byteNums)], { type: "application/pdf" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = json.filename;
+        a.click();
+        URL.revokeObjectURL(url);
+        toast.success("Report downloaded");
+      } else {
+        toast.error(json.error || "Failed to generate report");
+      }
+    } catch {
+      toast.error("Network error downloading report");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <AlertTriangle className="size-5 text-amber-500" />
-        <div>
-          <h2 className="text-lg font-semibold">Outstanding Balances</h2>
-          <p className="text-sm text-muted-foreground">
-            Memberships past their end date that are still marked active
-          </p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <AlertTriangle className="size-5 text-amber-500" />
+          <div>
+            <h2 className="text-lg font-semibold">Outstanding Balances</h2>
+            <p className="text-sm text-muted-foreground">
+              Memberships past their end date that are still marked active
+            </p>
+          </div>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleDownload}
+          disabled={downloading}
+        >
+          <FileDown className="size-4" />
+          {downloading ? "Generating..." : "Download Report"}
+        </Button>
       </div>
 
       {loading ? (
