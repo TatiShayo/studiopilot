@@ -295,4 +295,197 @@ describe("cancelBooking", () => {
     expect(result).toEqual({ success: true });
     expect(promoteCalled).toBe(false);
   });
+
+  it("cancels checked_in booking and promotes waitlist", async () => {
+    const updates: Record<string, unknown>[] = [];
+
+    const bookingQuery = makeQuery({ status: "checked_in" });
+    bookingQuery.update = vi.fn((payload: Record<string, unknown>) => {
+      updates.push(payload);
+      return { eq: vi.fn().mockResolvedValue({ error: null }) };
+    });
+
+    mockFrom.mockReturnValue(bookingQuery);
+
+    const fd = new FormData();
+    fd.set("bookingId", "b1");
+    fd.set("classId", "class1");
+
+    const result = await cancelBooking(fd);
+    expect(result).toEqual({ success: true });
+    expect(updates[0]).toEqual({ status: "cancelled" });
+    expect(updates[1]).toEqual({ status: "booked" });
+  });
+
+  it("cancels booking gracefully when no waitlist exists", async () => {
+    let secondUpdateSucceeded = false;
+
+    const bookingQuery = makeQuery({ status: "booked" });
+    bookingQuery.update = vi.fn((payload: Record<string, unknown>) => {
+      if (payload.status === "cancelled") {
+        return { eq: vi.fn().mockResolvedValue({ error: null }) };
+      }
+      secondUpdateSucceeded = true;
+      return { eq: vi.fn().mockResolvedValue({ error: null }) };
+    });
+
+    mockFrom.mockReturnValue(bookingQuery);
+
+    const fd = new FormData();
+    fd.set("bookingId", "b1");
+    fd.set("classId", "class1");
+
+    const result = await cancelBooking(fd);
+    expect(result).toEqual({ success: true });
+  });
+});
+
+describe("bookClientIntoClass edge cases", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFrom = vi.fn();
+  });
+
+  it("returns DB error when insert fails with unique constraint violation", async () => {
+    const existingQuery = makeQuery(null);
+    const classQuery = makeQuery({ id: "class1", class_types: { capacity: 10 } });
+    const countQuery = makeCountQuery(3);
+
+    const insertQuery = makeQuery(null);
+    insertQuery.insert = vi.fn(() =>
+      Promise.resolve({ error: { message: "duplicate key violates unique constraint" } }),
+    );
+
+    const callCount: string[] = [];
+    mockFrom.mockImplementation((table: string) => {
+      callCount.push(table);
+      if (table === "scheduled_classes") return classQuery;
+
+      const bookingCalls = callCount.filter((c) => c === "bookings").length;
+      if (bookingCalls === 1) return existingQuery;
+      if (bookingCalls === 2) return countQuery;
+      return insertQuery;
+    });
+
+    const fd = new FormData();
+    fd.set("clientId", "c1");
+    fd.set("classId", "class1");
+
+    const result = await bookClientIntoClass(fd);
+    expect(result).toEqual({ error: "duplicate key violates unique constraint" });
+  });
+
+  it("waitlists when capacity is 0", async () => {
+    let insertedPayload: Record<string, unknown> | null = null;
+
+    const existingQuery = makeQuery(null);
+    const classQuery = makeQuery({ id: "class1", class_types: { capacity: 0 } });
+    const countQuery = makeCountQuery(0);
+
+    const insertQuery = makeQuery(null);
+    insertQuery.insert = vi.fn((payload: Record<string, unknown>) => {
+      insertedPayload = payload;
+      return Promise.resolve({ error: null });
+    });
+
+    const callCount: string[] = [];
+    mockFrom.mockImplementation((table: string) => {
+      callCount.push(table);
+      if (table === "scheduled_classes") return classQuery;
+
+      const bookingCalls = callCount.filter((c) => c === "bookings").length;
+      if (bookingCalls === 1) return existingQuery;
+      if (bookingCalls === 2) return countQuery;
+      return insertQuery;
+    });
+
+    const fd = new FormData();
+    fd.set("clientId", "c1");
+    fd.set("classId", "class1");
+
+    const result = await bookClientIntoClass(fd);
+    expect(result).toEqual({ status: "waitlisted" });
+    expect(insertedPayload).toEqual({
+      client_id: "c1",
+      scheduled_class_id: "class1",
+      status: "waitlisted",
+    });
+  });
+
+  it("counts checked_in bookings toward capacity", async () => {
+    let insertedPayload: Record<string, unknown> | null = null;
+
+    const existingQuery = makeQuery(null);
+    const classQuery = makeQuery({ id: "class1", class_types: { capacity: 5 } });
+    // 4 checked_in + 1 booked = 5 total = at capacity
+    const countQuery = makeCountQuery(5);
+
+    const insertQuery = makeQuery(null);
+    insertQuery.insert = vi.fn((payload: Record<string, unknown>) => {
+      insertedPayload = payload;
+      return Promise.resolve({ error: null });
+    });
+
+    const callCount: string[] = [];
+    mockFrom.mockImplementation((table: string) => {
+      callCount.push(table);
+      if (table === "scheduled_classes") return classQuery;
+
+      const bookingCalls = callCount.filter((c) => c === "bookings").length;
+      if (bookingCalls === 1) return existingQuery;
+      if (bookingCalls === 2) return countQuery;
+      return insertQuery;
+    });
+
+    const fd = new FormData();
+    fd.set("clientId", "c1");
+    fd.set("classId", "class1");
+
+    const result = await bookClientIntoClass(fd);
+    expect(result).toEqual({ status: "waitlisted" });
+  });
+
+  it("blocks booking when client already has a checked_in booking for the same class", async () => {
+    const existingQuery = makeQuery({ id: "b1", status: "checked_in" });
+    mockFrom.mockReturnValue(existingQuery);
+
+    const fd = new FormData();
+    fd.set("clientId", "c1");
+    fd.set("classId", "class1");
+
+    const result = await bookClientIntoClass(fd);
+    expect(result).toEqual({ error: "Already booked or waitlisted" });
+  });
+
+  it("uses default capacity of 20 when class_types capacity is missing", async () => {
+    let insertedPayload: Record<string, unknown> | null = null;
+
+    const existingQuery = makeQuery(null);
+    const classQuery = makeQuery({ id: "class1", class_types: {} });
+    const countQuery = makeCountQuery(15);
+
+    const insertQuery = makeQuery(null);
+    insertQuery.insert = vi.fn((payload: Record<string, unknown>) => {
+      insertedPayload = payload;
+      return Promise.resolve({ error: null });
+    });
+
+    const callCount: string[] = [];
+    mockFrom.mockImplementation((table: string) => {
+      callCount.push(table);
+      if (table === "scheduled_classes") return classQuery;
+
+      const bookingCalls = callCount.filter((c) => c === "bookings").length;
+      if (bookingCalls === 1) return existingQuery;
+      if (bookingCalls === 2) return countQuery;
+      return insertQuery;
+    });
+
+    const fd = new FormData();
+    fd.set("clientId", "c1");
+    fd.set("classId", "class1");
+
+    const result = await bookClientIntoClass(fd);
+    expect(result).toEqual({ status: "booked" });
+  });
 });

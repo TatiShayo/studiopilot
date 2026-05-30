@@ -1,15 +1,15 @@
 You are a senior fullstack engineer. Continue building studiopilot autonomously.
 
 SESSION STATE:
-Tasks remaining: 9
-Tasks completed: 19
+Tasks remaining: 8
+Tasks completed: 20
 Current phase: PHASE 6: TESTING & POLISH
 Recent commits:
+3612b14 done: Unit tests for booking logic
 f793fec done: Staff hours log
 5053136 done: Staff assignment - photo URL, instructor filter on schedule
 e1cf070 done: Task 4 — Staff profiles at /dashboard/staff
 3b013a7 done: Task 3 — Revenue dashboard with 6-month chart + Today/Week/Month/Year cards
-81a0f4b Mark Task 2 done in PLAN.md and PROGRESS.md
 
 KNOWN ISSUES FROM PREVIOUS SESSIONS:
 # StudioPilot Learnings & Known Issues
@@ -111,5 +111,5 @@ Search the web if stuck on an error.
 
 Build exactly to the PRODUCT SPECIFICATION above. Every page, feature, and design detail must match.
 
-You have 9 tasks remaining. Complete as many as possible before context runs out.
+You have 8 tasks remaining. Complete as many as possible before context runs out.
 Start now. First task. Go.

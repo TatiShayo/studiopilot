@@ -49,4 +49,8 @@
 
 [Sat 05/30/2026] Phase 5: STAFF complete — Staff hours log with tabs, table, form, monthly total card
 
+[Sat 05/30/2026] Phase 6 Task 1: Unit tests for booking logic — 10 tests (no double-booking, capacity, waitlist, cancel+promote)
+
 [2026-05-30 13:04:02.790803] Session #1: 9 tasks left
+
+[2026-05-30 13:12:09.496486] Session #2: 8 tasks left
