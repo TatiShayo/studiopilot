@@ -4,69 +4,86 @@ import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, ExternalLink } from "lucide-react";
+import { AlertTriangle, ExternalLink, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { format, startOfMonth, endOfMonth } from "date-fns";
-import type { Client, Payment } from "@/lib/types";
+import { format } from "date-fns";
+import type { Client, Payment, Membership } from "@/lib/types";
 
 const kesFormatter = new Intl.NumberFormat("en-KE", {
   style: "currency",
   currency: "KES",
 });
 
-interface OutstandingClient extends Client {
+interface OverdueClient {
+  client: Client;
+  membership: Membership;
   lastPayment: Payment | null;
-  totalPaidCents: number;
+  paidThisMonth: number;
 }
 
 export default function OutstandingBalance() {
-  const [clients, setClients] = useState<OutstandingClient[]>([]);
+  const [overdue, setOverdue] = useState<OverdueClient[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchOutstanding = async () => {
       const supabase = createClient();
 
-      const { data: monthlyClients } = await supabase
+      const today = new Date().toISOString().split("T")[0];
+
+      const { data: expiredMemberships } = await supabase
+        .from("memberships")
+        .select("*")
+        .eq("status", "active")
+        .lt("end_date", today);
+
+      const memberships = (expiredMemberships as Membership[]) ?? [];
+
+      if (memberships.length === 0) {
+        setOverdue([]);
+        setLoading(false);
+        return;
+      }
+
+      const clientIds = [...new Set(memberships.map((m) => m.client_id))];
+
+      const { data: clientsData } = await supabase
         .from("clients")
         .select("*")
-        .eq("membership_tier", "monthly")
-        .eq("status", "active");
+        .in("id", clientIds);
 
-      const now = new Date();
-      const monthStart = startOfMonth(now).toISOString();
+      const clientsMap = new Map<string, Client>();
+      (clientsData as Client[] | null)?.forEach((c) => clientsMap.set(c.id, c));
 
-      const { data: payments } = await supabase
+      const { data: paymentsData } = await supabase
         .from("payments")
         .select("*")
-        .gte("created_at", monthStart)
-        .lte("created_at", endOfMonth(now).toISOString());
+        .in("client_id", clientIds)
+        .order("created_at", { ascending: false });
 
-      const allPayments = (payments as Payment[]) ?? [];
-      const paidClientIds = new Set(allPayments.map((p) => p.client_id));
+      const payments = (paymentsData as Payment[]) ?? [];
 
-      const monthlyList = (monthlyClients as Client[]) ?? [];
-      const outstanding = monthlyList
-        .filter((c) => !paidClientIds.has(c.id))
-        .map((c) => {
-          const clientPayments = allPayments.filter(
-            (p) => p.client_id === c.id,
-          );
-          const last = clientPayments.length > 0
-            ? clientPayments.reduce((a, b) =>
-                new Date(a.created_at) > new Date(b.created_at) ? a : b
-              )
-            : null;
+      const result: OverdueClient[] = memberships.map((m) => {
+        const client = clientsMap.get(m.client_id);
+        const clientPayments = payments.filter((p) => p.client_id === m.client_id);
+        const lastPayment = clientPayments.length > 0 ? clientPayments[0] : null;
 
-          const totalPaidCents = allPayments
-            .filter((p) => p.client_id === c.id)
-            .reduce((sum, p) => sum + p.amount_cents, 0);
+        const now = new Date();
+        const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const paidThisMonth = clientPayments
+          .filter((p) => (p.paid_at ?? p.created_at) >= thisMonthStart)
+          .reduce((sum, p) => sum + p.amount_cents, 0);
 
-          return { ...c, lastPayment: last, totalPaidCents };
-        });
+        return {
+          client: client!,
+          membership: m,
+          lastPayment,
+          paidThisMonth,
+        };
+      }).filter((r) => r.client);
 
-      setClients(outstanding);
+      setOverdue(result);
       setLoading(false);
     };
 
@@ -80,68 +97,96 @@ export default function OutstandingBalance() {
         <div>
           <h2 className="text-lg font-semibold">Outstanding Balances</h2>
           <p className="text-sm text-muted-foreground">
-            Monthly members without a payment recorded for {format(new Date(), "MMMM yyyy")}
+            Memberships past their end date that are still marked active
           </p>
         </div>
       </div>
 
       {loading ? (
         <p className="text-sm text-muted-foreground">Loading...</p>
-      ) : clients.length === 0 ? (
+      ) : overdue.length === 0 ? (
         <Card>
           <CardContent className="py-8 text-center">
             <p className="text-sm text-muted-foreground">
-              All monthly members have paid for this month. Great job!
+              All memberships are up to date. No overdue balances.
             </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-3">
-          {clients.map((c) => (
-            <Card key={c.id} className="border-amber-200 dark:border-amber-900">
-              <CardContent className="flex items-center justify-between py-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium">{c.name}</span>
-                    <Badge variant="outline">
-                      {c.membership_tier.replace("_", " ")}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">{c.email}</p>
-                  {c.lastPayment && (
+        <>
+          <Card className="border-amber-500/20 bg-amber-500/5">
+            <CardContent className="py-4">
+              <div className="flex items-center gap-2">
+                <Bell className="size-5 text-amber-500" />
+                <p className="text-sm font-medium">
+                  {overdue.length} client{overdue.length > 1 ? "s" : ""} with overdue
+                  membership{overdue.length > 1 ? "s" : ""}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-3">
+            {overdue.map((item) => (
+              <Card
+                key={item.membership.id}
+                className="border-amber-200 dark:border-amber-900"
+              >
+                <CardContent className="flex items-center justify-between py-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{item.client?.name}</span>
+                      <Badge variant="outline">{item.membership.plan_name}</Badge>
+                      <Badge variant="destructive">Overdue</Badge>
+                    </div>
                     <p className="text-xs text-muted-foreground">
-                      Last payment: {format(new Date(c.lastPayment.created_at), "MMM d, yyyy")}{" "}
-                      · {kesFormatter.format(c.lastPayment.amount_cents / 100)}
+                      {item.client?.email}
                     </p>
-                  )}
-                  {!c.lastPayment && (
-                    <p className="text-xs text-amber-600 dark:text-amber-400">
-                      No payments recorded
+                    <p className="text-xs text-muted-foreground">
+                      End date: {format(new Date(item.membership.end_date!), "MMM d, yyyy")}
+                      {" · "}
+                      {kesFormatter.format(item.membership.price / 100)}/
+                      {item.membership.billing_cycle}
                     </p>
-                  )}
-                </div>
-                <Link href={`/dashboard/clients/${c.id}`}>
-                  <Button variant="outline" size="sm">
-                    <ExternalLink className="size-3" /> View
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    {item.lastPayment && (
+                      <p className="text-xs text-muted-foreground">
+                        Last payment:{" "}
+                        {format(new Date(item.lastPayment.paid_at ?? item.lastPayment.created_at), "MMM d, yyyy")}{" "}
+                        · {kesFormatter.format(item.lastPayment.amount_cents / 100)}
+                      </p>
+                    )}
+                    {item.paidThisMonth > 0 && (
+                      <p className="text-xs text-green-600 dark:text-green-400">
+                        Paid this month: {kesFormatter.format(item.paidThisMonth / 100)}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Link href={`/dashboard/clients/${item.client?.id}`}>
+                      <Button variant="outline" size="sm">
+                        <ExternalLink className="size-3" /> View
+                      </Button>
+                    </Link>
+                    <Link href={`/dashboard/payments?remind=${item.client?.id}`}>
+                      <Button size="sm" variant="secondary">
+                        <Bell className="size-3" /> Send Reminder
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
 
       <Card>
         <CardHeader>
           <CardTitle className="text-sm">About Outstanding Balance</CardTitle>
           <CardDescription>
-            This shows monthly subscription members who haven&apos;t had a payment
-            recorded this month. Record their payment on the Transactions tab,
-            or set up{" "}
-            <Link href="/dashboard/clients/plans" className="underline">
-              Stripe subscriptions
-            </Link>{" "}
-            for automatic billing.
+            Memberships with a past end date but still marked as active indicate the
+            client may need to renew. Record their payment on the Transactions tab
+            to extend their membership.
           </CardDescription>
         </CardHeader>
       </Card>

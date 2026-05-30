@@ -32,6 +32,7 @@ import { Plus, Search, Banknote, CreditCard, Smartphone, Building2, Crown, Calen
 import { useEffect, useState, useRef } from "react";
 import type { Client, Payment, Membership } from "@/lib/types";
 import RevenueDashboard from "./revenue-dashboard";
+import OutstandingBalance from "@/components/outstanding-balance";
 
 type PaymentWithClient = Payment & { clients: Pick<Client, "id" | "name" | "email"> | null };
 
@@ -302,6 +303,7 @@ export default function PaymentsPage() {
           <TabsList>
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="memberships">Memberships</TabsTrigger>
+            <TabsTrigger value="outstanding">Outstanding</TabsTrigger>
             <TabsTrigger value="revenue">Revenue Dashboard</TabsTrigger>
           </TabsList>
         </div>
@@ -705,6 +707,10 @@ export default function PaymentsPage() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="outstanding">
+          <OutstandingBalance />
         </TabsContent>
       </Tabs>
     </div>

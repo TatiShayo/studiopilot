@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Mail, Phone } from "lucide-react";
-import type { Client, Payment, Booking, ClientNote, ScheduledClass, ClassType } from "@/lib/types";
+import type { Client, Payment, Booking, ClientNote, ScheduledClass, ClassType, Membership } from "@/lib/types";
 import ClientBillingSection from "@/components/client-billing-section";
+import { AlertTriangle } from "lucide-react";
 
 const kesFormatter = new Intl.NumberFormat("en-KE", {
   style: "currency",
@@ -73,6 +74,17 @@ export default async function ClientProfilePage({
     .eq("client_id", id)
     .order("created_at", { ascending: false })
     .limit(20);
+
+  const { data: memberships } = await supabase
+    .from("memberships")
+    .select("*")
+    .eq("client_id", id)
+    .order("created_at", { ascending: false });
+
+  const membershipList = (memberships as Membership[] | null) ?? [];
+  const activeMembership = membershipList.find((m) => m.status === "active");
+  const today = new Date().toISOString().split("T")[0];
+  const isOverdue = activeMembership && activeMembership.end_date && activeMembership.end_date < today;
 
   const statusVariant = (s: string) =>
     s === "active" ? "default" : s === "vip" ? "secondary" : "outline";
@@ -219,6 +231,41 @@ export default async function ClientProfilePage({
               </CardHeader>
               <CardContent>
                 <p className="text-sm">{c.medical_notes}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {activeMembership && (
+            <Card className={isOverdue ? "border-red-500/30 bg-red-500/5" : "border-teal-500/20 bg-teal-500/5"}>
+              <CardHeader>
+                <CardTitle className="text-sm flex items-center gap-2">
+                  Membership
+                  {isOverdue && <AlertTriangle className="size-4 text-red-500" />}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Plan</span>
+                  <span className="font-medium">{activeMembership.plan_name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Price</span>
+                  <span>{kesFormatter.format(activeMembership.price / 100)}/{activeMembership.billing_cycle}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Start</span>
+                  <span>{new Date(activeMembership.start_date).toLocaleDateString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">End</span>
+                  <span>{activeMembership.end_date ? new Date(activeMembership.end_date).toLocaleDateString() : "—"}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-muted-foreground">Status</span>
+                  <Badge variant={activeMembership.status === "active" ? "default" : "destructive"}>
+                    {isOverdue ? "Overdue" : activeMembership.status}
+                  </Badge>
+                </div>
               </CardContent>
             </Card>
           )}

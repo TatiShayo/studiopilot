@@ -1,3 +1,7 @@
-Mark Task 1 done in PLAN.md and PROGRESS.md
+done: Task 2 — Outstanding balance: flag clients with overdue memberships
+
+- Rewrote outstanding-balance.tsx to query memberships table for expired active memberships
+- Added Outstanding tab to /dashboard/payments with overdue count banner and per-client cards
+- Added membership info card to client detail page with overdue detection and status badge
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>
