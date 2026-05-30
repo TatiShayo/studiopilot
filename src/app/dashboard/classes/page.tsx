@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Clock, Users, DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ClassType } from "@/lib/types";
+import { AIDescriptionButton } from "./ai-description-button";
 
 export default function ClassTypesPage() {
   const [classTypes, setClassTypes] = useState<ClassType[]>([]);
@@ -164,6 +165,10 @@ export default function ClassTypesPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="A dynamic flow for all levels..."
                   rows={2}
+                />
+                <AIDescriptionButton
+                  classTypeName={name}
+                  onDescription={setDescription}
                 />
               </div>
               {error && (

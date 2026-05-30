@@ -37,7 +37,7 @@
 
 ## PHASE 7: ADVANCED
 - [x] Automated birthday emails to clients
-- [ ] Class series packages (10-class pack)
+- [x] Class series packages (10-class pack)
 - [ ] AI class description generator
 - [ ] Retention alerts: flag clients who haven't visited in 30 days
 - [ ] Digital waiver signing: clients sign liability waiver online before first class

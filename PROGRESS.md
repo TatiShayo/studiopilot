@@ -61,4 +61,6 @@
 
 [2026-05-30] Phase 6 Task 4: Lighthouse ≥85 — metadata, SEO keywords, OG tags, sitemap.xml, robots.txt, CSP headers, font-display swap, reduced-motion support
 
-[2026-05-30] Phase 7 Task 1: Automated birthday emails — birth_date column, new client form field, client profile display, /api/cron/birthday-emails endpoint with Resend
+[2026-05-30] Phase 7 Task 1: Automated birthday emails — birth_date column, new client form field, client profile display, /api/cron/birthday-emails endpoint
+
+[2026-05-30] Phase 7 Task 2: Class series packages — class_credits column, ClientClassCredits component (5/10/20 packs + custom), auto-deduct credits on booking, credit display on book page
