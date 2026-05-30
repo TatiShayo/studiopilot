@@ -2,7 +2,6 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useEffect, useRef, useState } from "react";
 import {
   BarChart,
@@ -12,10 +11,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
 } from "recharts";
-import { format, subDays, startOfDay, eachDayOfInterval } from "date-fns";
+import { format, startOfMonth, subMonths, startOfWeek, startOfDay, endOfDay, startOfYear } from "date-fns";
 import type { Payment } from "@/lib/types";
 
 const kesFormatter = new Intl.NumberFormat("en-KE", {
@@ -23,15 +20,19 @@ const kesFormatter = new Intl.NumberFormat("en-KE", {
   currency: "KES",
 });
 
-interface DailyRevenue {
-  date: string;
+interface MonthlyRevenue {
+  month: string;
   revenue: number;
   count: number;
 }
 
 export default function RevenueDashboard() {
-  const [daily, setDaily] = useState<DailyRevenue[]>([]);
-  const [period, setPeriod] = useState<"7" | "30">("7");
+  const [monthly, setMonthly] = useState<MonthlyRevenue[]>([]);
+  const [todayRevenue, setTodayRevenue] = useState(0);
+  const [weekRevenue, setWeekRevenue] = useState(0);
+  const [monthRevenue, setMonthRevenue] = useState(0);
+  const [yearRevenue, setYearRevenue] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null);
   const getSupabase = () => {
@@ -42,101 +43,124 @@ export default function RevenueDashboard() {
   useEffect(() => {
     const fetchRevenue = async () => {
       const supabase = getSupabase();
-      const days = parseInt(period);
-      const since = subDays(startOfDay(new Date()), days).toISOString();
 
+      const sixMonthsAgo = subMonths(startOfMonth(new Date()), 5).toISOString();
       const { data } = await supabase
         .from("payments")
-        .select("amount_cents, created_at")
-        .gte("created_at", since)
+        .select("amount_cents, created_at, paid_at")
+        .gte("created_at", sixMonthsAgo)
         .order("created_at");
 
-      const payments = (data as Pick<Payment, "amount_cents" | "created_at">[]) ?? [];
+      const payments = (data as Pick<Payment, "amount_cents" | "created_at" | "paid_at">[]) ?? [];
 
-      const dates = eachDayOfInterval({
-        start: subDays(new Date(), days),
-        end: new Date(),
-      });
+      const now = new Date();
+      const todayStart = startOfDay(now).toISOString();
+      const todayEnd = endOfDay(now).toISOString();
+      const weekStart = startOfWeek(now).toISOString();
+      const monthStart = startOfMonth(now).toISOString();
+      const yearStart = startOfYear(now).toISOString();
 
-      const dailyData: DailyRevenue[] = dates.map((d) => {
-        const key = format(d, "yyyy-MM-dd");
-        const dayPayments = payments.filter(
-          (p) => format(new Date(p.created_at), "yyyy-MM-dd") === key
+      const getTime = (p: typeof payments[number]) => p.paid_at ?? p.created_at;
+
+      const today = payments
+        .filter((p) => getTime(p) >= todayStart && getTime(p) <= todayEnd)
+        .reduce((s, p) => s + p.amount_cents, 0);
+      const week = payments
+        .filter((p) => getTime(p) >= weekStart)
+        .reduce((s, p) => s + p.amount_cents, 0);
+      const month = payments
+        .filter((p) => getTime(p) >= monthStart)
+        .reduce((s, p) => s + p.amount_cents, 0);
+      const year = payments
+        .filter((p) => getTime(p) >= yearStart)
+        .reduce((s, p) => s + p.amount_cents, 0);
+
+      setTodayRevenue(today);
+      setWeekRevenue(week);
+      setMonthRevenue(month);
+      setYearRevenue(year);
+
+      const months: MonthlyRevenue[] = [];
+      for (let i = 5; i >= 0; i--) {
+        const monthDate = subMonths(now, i);
+        const monthKey = format(monthDate, "yyyy-MM");
+        const monthLabel = format(monthDate, "MMM yy");
+        const monthStartStr = startOfMonth(monthDate).toISOString();
+        const nextMonth = subMonths(monthDate, -1);
+        const nextMonthStart = startOfMonth(nextMonth).toISOString();
+
+        const monthPayments = payments.filter(
+          (p) => getTime(p) >= monthStartStr && getTime(p) < nextMonthStart
         );
-        return {
-          date: format(d, "MMM d"),
-          revenue: Math.round(dayPayments.reduce((s, p) => s + p.amount_cents, 0) / 100),
-          count: dayPayments.length,
-        };
-      });
-
-      setDaily(dailyData);
+        months.push({
+          month: monthLabel,
+          revenue: Math.round(monthPayments.reduce((s, p) => s + p.amount_cents, 0) / 100),
+          count: monthPayments.length,
+        });
+      }
+      setMonthly(months);
+      setLoading(false);
     };
 
     fetchRevenue();
-  }, [period]);
-
-  const totalRevenue = daily.reduce((s, d) => s + d.revenue, 0);
-  const totalTransactions = daily.reduce((s, d) => s + d.count, 0);
-  const avgPerDay = totalTransactions > 0 ? (totalRevenue / (period === "7" ? 7 : 30)).toFixed(2) : "0.00";
+  }, []);
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">
-              {period === "7" ? "Week" : "Month"} Revenue
-            </CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">Today&apos;s Revenue</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{kesFormatter.format(totalRevenue)}</p>
+            <p className="text-2xl font-bold text-teal-500">
+              {kesFormatter.format(todayRevenue / 100)}
+            </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">Avg / Day</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">This Week</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{kesFormatter.format(Number(avgPerDay))}</p>
+            <p className="text-2xl font-bold">{kesFormatter.format(weekRevenue / 100)}</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">Transactions</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">This Month</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{totalTransactions}</p>
+            <p className="text-2xl font-bold">{kesFormatter.format(monthRevenue / 100)}</p>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Tabs value={period} onValueChange={(v) => setPeriod(v as "7" | "30")}>
-          <TabsList>
-            <TabsTrigger value="7">7 Days</TabsTrigger>
-            <TabsTrigger value="30">30 Days</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-muted-foreground">This Year</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold">{kesFormatter.format(yearRevenue / 100)}</p>
+          </CardContent>
+        </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Daily Revenue</CardTitle>
-          <CardDescription>
-            {period === "7" ? "Last 7 days" : "Last 30 days"}
-          </CardDescription>
+          <CardTitle className="text-base">Revenue by Month</CardTitle>
+          <CardDescription>Last 6 months</CardDescription>
         </CardHeader>
         <CardContent>
-          {daily.length === 0 ? (
+          {loading ? (
+            <p className="text-sm text-muted-foreground text-center py-8">Loading...</p>
+          ) : monthly.every((m) => m.revenue === 0) ? (
             <p className="text-sm text-muted-foreground text-center py-8">
               No payment data yet.
             </p>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={daily}>
+              <BarChart data={monthly}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="date" className="text-xs" />
+                <XAxis dataKey="month" className="text-xs" />
                 <YAxis className="text-xs" />
                 <Tooltip
                   formatter={(value) => [kesFormatter.format(Number(value ?? 0)), "Revenue"]}
