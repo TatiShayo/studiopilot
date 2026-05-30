@@ -106,10 +106,10 @@ export default async function UpcomingClassesPage({
                     <Link
                       key={sc.id}
                       href={`/dashboard/classes/${sc.id}`}
-                      className="flex items-center justify-between rounded-lg border bg-muted/50 p-3 hover:bg-muted transition-colors"
+                      className="flex items-center justify-between gap-2 rounded-lg border bg-muted/50 p-3 hover:bg-muted transition-colors"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="flex flex-col items-center">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex flex-col items-center shrink-0">
                           <span className="text-sm font-bold">
                             {format(new Date(sc.start_time), "h:mm")}
                           </span>
@@ -117,17 +117,17 @@ export default async function UpcomingClassesPage({
                             {format(new Date(sc.start_time), "a")}
                           </span>
                         </div>
-                        <div className="h-8 w-px bg-border" />
-                        <div>
-                          <p className="font-medium">{sc.class_types?.name ?? "Class"}</p>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                        <div className="hidden sm:block h-8 w-px bg-border" />
+                        <div className="min-w-0">
+                          <p className="font-medium truncate">{sc.class_types?.name ?? "Class"}</p>
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground mt-0.5">
                             <span className="flex items-center gap-1">
                               <Clock className="size-3" />
                               {sc.class_types?.duration_minutes ?? "-"}min
                             </span>
                             <span className="flex items-center gap-1">
                               <Users className="size-3" />
-                              {sc.bookings?.[0]?.count ?? 0} / {sc.class_types?.capacity ?? "-"}
+                              {sc.bookings?.[0]?.count ?? 0}/{sc.class_types?.capacity ?? "-"}
                             </span>
                             {sc.staff && (
                               <span className="flex items-center gap-1">
@@ -142,7 +142,7 @@ export default async function UpcomingClassesPage({
                           </div>
                         </div>
                       </div>
-                      <Badge variant={statusVariant(sc.status)}>
+                      <Badge variant={statusVariant(sc.status)} className="shrink-0">
                         {sc.status}
                       </Badge>
                     </Link>

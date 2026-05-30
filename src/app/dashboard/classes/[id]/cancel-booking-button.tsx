@@ -29,13 +29,13 @@ export function CancelBookingButton({
 
   return (
     <Button
-      size="sm"
+      size="icon"
       variant="ghost"
       onClick={handleCancel}
       disabled={loading}
-      className="size-7"
+      className="size-9"
     >
-      <X className="size-3.5 text-muted-foreground" />
+      <X className="size-4 text-muted-foreground" />
     </Button>
   );
 }

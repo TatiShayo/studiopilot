@@ -120,13 +120,13 @@ export default function SchedulePage() {
 
   return (
     <div>
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex flex-wrap items-center gap-3 mb-6">
         <Link href="/dashboard/classes">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="size-4" />
           </Button>
         </Link>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <h1 className="text-2xl font-bold tracking-tight">Weekly Schedule</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Set your recurring weekly class times
@@ -138,7 +138,7 @@ export default function SchedulePage() {
       </div>
 
       {showForm && (
-        <Card className="max-w-lg mb-6">
+        <Card className="mb-6">
           <CardHeader>
             <CardTitle>Add Recurring Class</CardTitle>
             <CardDescription>
@@ -246,14 +246,14 @@ export default function SchedulePage() {
                   {slots.map((s) => (
                     <div
                       key={s.id}
-                      className="flex items-center justify-between rounded-lg border bg-muted/50 p-3"
+                      className="flex items-center justify-between gap-2 rounded-lg border bg-muted/50 p-3"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-wrap items-center gap-2 min-w-0">
                         <div className="flex items-center gap-1.5 text-sm font-medium">
-                          <Clock className="size-3.5 text-muted-foreground" />
+                          <Clock className="size-3.5 text-muted-foreground shrink-0" />
                           {s.start_time}
                         </div>
-                        <Badge variant="secondary">
+                        <Badge variant="secondary" className="shrink-0">
                           {s.class_types?.name ?? "Unknown"}
                         </Badge>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -269,10 +269,10 @@ export default function SchedulePage() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="size-7"
+                        className="size-9 shrink-0"
                         onClick={() => handleDelete(s.id)}
                       >
-                        <Trash2 className="size-3.5 text-muted-foreground" />
+                        <Trash2 className="size-4 text-muted-foreground" />
                       </Button>
                     </div>
                   ))}

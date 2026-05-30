@@ -71,8 +71,8 @@ export default async function ClientsPage({
           <p className="text-muted-foreground">No clients yet. Add your first client to get started.</p>
         </div>
       ) : (
-        <div className="rounded-xl border bg-white dark:bg-zinc-950">
-          <Table>
+        <div className="rounded-xl border bg-white dark:bg-zinc-950 overflow-x-auto">
+          <Table className="min-w-[500px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>

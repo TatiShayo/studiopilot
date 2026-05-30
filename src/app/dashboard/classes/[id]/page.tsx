@@ -85,7 +85,7 @@ export default async function ClassDetailPage({
           </Button>
         </Link>
         <div className="flex-1 min-w-0">
-          <h1 className="text-2xl font-bold tracking-tight truncate">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
             {classType?.name ?? "Class"} · {format(new Date(sc.start_time), "EEEE, MMM d")}
           </h1>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-sm text-muted-foreground">
@@ -109,18 +109,20 @@ export default async function ClassDetailPage({
             )}
           </div>
         </div>
-        {sc.status === "scheduled" && <CancelClassButton classId={id} />}
-        <Badge
-          variant={
-            sc.status === "scheduled"
-              ? "default"
-              : sc.status === "completed"
-              ? "secondary"
-              : "destructive"
-          }
-        >
-          {sc.status}
-        </Badge>
+        <div className="flex items-center gap-2">
+          {sc.status === "scheduled" && <CancelClassButton classId={id} />}
+          <Badge
+            variant={
+              sc.status === "scheduled"
+                ? "default"
+                : sc.status === "completed"
+                ? "secondary"
+                : "destructive"
+            }
+          >
+            {sc.status}
+          </Badge>
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -135,6 +137,7 @@ export default async function ClassDetailPage({
               {booked.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No clients booked yet.</p>
               ) : (
+                <div className="overflow-x-auto -mx-6 px-6">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -159,18 +162,21 @@ export default async function ClassDetailPage({
                             {b.status === "checked_in" ? "Checked In" : "Booked"}
                           </Badge>
                         </TableCell>
-                        <TableCell className="flex items-center gap-1">
+                        <TableCell>
+                          <div className="flex items-center gap-1">
                           {b.status === "booked" && sc.status === "scheduled" && (
                             <CheckInButton bookingId={b.id} classId={id} />
                           )}
                           {b.status !== "checked_in" && sc.status === "scheduled" && (
                             <CancelBookingButton bookingId={b.id} classId={id} />
                           )}
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -183,6 +189,7 @@ export default async function ClassDetailPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                <div className="overflow-x-auto -mx-6 px-6">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -214,6 +221,7 @@ export default async function ClassDetailPage({
                     ))}
                   </TableBody>
                 </Table>
+                </div>
               </CardContent>
             </Card>
           )}

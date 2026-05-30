@@ -1,15 +1,15 @@
 You are a senior fullstack engineer. Continue building studiopilot autonomously.
 
 SESSION STATE:
-Tasks remaining: 69
-Tasks completed: 33
+Tasks remaining: 67
+Tasks completed: 35
 Current phase: PHASE 7: PRODUCTION HARDENING
 Recent commits:
+c671bf0 done: KES money formatting — staff page now uses formatKes instead of raw toLocaleString(); all money amounts across codebase use Intl.NumberFormat KES
 55d21f5 done: Fix TypeScript errors — replaced missing kesFormatter with formatKes, npm run build and tsc --noEmit both zero errors
 966ac51 done: All 28 tasks complete — all phases checked off
 b4d5b19 done: Digital waiver signing - clients sign liability waiver before first class
 e02a442 done: Retention alerts - Send reminder email buttons for at-risk clients
-117b0df done: Retention alerts - flag clients with no visits in 30+ days on dashboard
 
 KNOWN ISSUES FROM PREVIOUS SESSIONS:
 # StudioPilot Learnings & Known Issues
@@ -111,5 +111,5 @@ Search the web if stuck on an error.
 
 Build exactly to the PRODUCT SPECIFICATION above. Every page, feature, and design detail must match.
 
-You have 69 tasks remaining. Complete as many as possible before context runs out.
+You have 67 tasks remaining. Complete as many as possible before context runs out.
 Start now. First task. Go.

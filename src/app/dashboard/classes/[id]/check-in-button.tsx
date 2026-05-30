@@ -29,13 +29,14 @@ export function CheckInButton({
 
   return (
     <Button
-      size="sm"
+      size="default"
       variant="outline"
       onClick={handleCheckIn}
       disabled={loading}
+      className="h-9 min-h-[36px] min-w-[44px]"
     >
-      <Check className="size-3.5" />
-      {loading ? "..." : "Check In"}
+      <Check className="size-4" />
+      <span className="hidden sm:inline ml-1">{loading ? "..." : "Check In"}</span>
     </Button>
   );
 }

@@ -281,14 +281,14 @@ export default function PaymentsPage() {
 
       <Card className="mb-6 border-teal-500/20 bg-teal-500/5">
         <CardContent className="py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <p className="text-sm text-muted-foreground">Total Revenue This Month</p>
               <p className="text-3xl font-bold text-teal-500">
                 {formatKes(thisMonthRevenue)}
               </p>
             </div>
-            <Button size="sm" onClick={() => setShowForm(!showForm)}>
+            <Button size="sm" onClick={() => setShowForm(!showForm)} className="self-start sm:self-auto">
               <Plus className="size-4" /> Record Payment
             </Button>
           </div>

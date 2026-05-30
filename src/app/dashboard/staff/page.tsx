@@ -449,12 +449,12 @@ export default function StaffPage() {
 
         {/* === HOURS LOG TAB === */}
         <TabsContent value="hours">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-4">
               <select
                 value={hoursFilterStaff}
                 onChange={(e) => setHoursFilterStaff(e.target.value)}
-                className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm"
+                className="h-9 rounded-md border border-input bg-background px-3 py-1 text-sm max-w-[160px]"
               >
                 <option value="all">All Staff</option>
                 {staff.map((s) => (
@@ -595,7 +595,7 @@ export default function StaffPage() {
               </CardContent>
             </Card>
           ) : (
-            <div className="rounded-md border">
+            <div className="rounded-md border overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

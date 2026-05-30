@@ -49,10 +49,10 @@
 - [x] Add loading.tsx to every dashboard route
 - [x] Add error.tsx to every dashboard route with a helpful "Something went wrong" UI
 - [x] Add robots.txt and sitemap.xml
-- [ ] All API routes: add Zod validation on request bodies
-- [ ] All money amounts: use Intl.NumberFormat KES formatting consistently (never raw numbers)
-- [ ] Mobile audit: test every page at 375px — the schedule and check-in pages MUST work on phone
-- [ ] Add Open Graph tags to landing page
+- [x] All API routes: add Zod validation on request bodies
+- [x] All money amounts: use Intl.NumberFormat KES formatting consistently (never raw numbers)
+- [x] Mobile audit: test every page at 375px — the schedule and check-in pages MUST work on phone
+- [x] Add Open Graph tags to landing page
 
 ## PHASE 8: CLASS BOOKING ENGINE COMPLETION
 - [ ] Public client portal /portal/[studioSlug]: finish and test full booking flow end-to-end
@@ -92,17 +92,6 @@
 - [ ] README.md + DEPLOY.md (setup, Supabase, Stripe, deploy to Vercel)
 - [ ] Pricing page: make sure Stripe checkout links work for all 3 tiers
 - [ ] Add "Import from Mindbody" notice on landing: "Migration assistance available — contact us"
-
-## PHASE 7: PRODUCTION HARDENING
-- [ ] npm run build: zero errors, zero warnings
-- [ ] npx tsc --noEmit: zero errors
-- [ ] Add loading.tsx to every dashboard route
-- [ ] Add error.tsx to every dashboard route with a helpful "Something went wrong" UI
-- [ ] All API routes: add Zod validation on request bodies
-- [ ] All money amounts: use Intl.NumberFormat KES formatting consistently (never raw numbers)
-- [ ] Mobile audit: test every page at 375px — the schedule and check-in pages MUST work on phone
-- [ ] Add Open Graph tags to landing page
-- [ ] Add robots.txt and sitemap.xml
 
 ## PHASE 8: CLASS BOOKING ENGINE COMPLETION
 - [ ] Public client portal /portal/[studioSlug]: finish and test full booking flow end-to-end
