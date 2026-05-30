@@ -54,3 +54,5 @@
 [2026-05-30 13:04:02.790803] Session #1: 9 tasks left
 
 [2026-05-30 13:12:09.496486] Session #2: 8 tasks left
+
+[2026-05-30] Phase 6 Task 2: E2E booking flow — 8 Cypress tests (lookup, booking, cancel, sign out, empty validation)

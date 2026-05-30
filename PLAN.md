@@ -31,7 +31,7 @@
 
 ## PHASE 6: TESTING & POLISH
 - [x] Unit tests for booking logic (no double-booking, capacity enforcement)
-- [ ] E2e: book a class flow
+- [x] E2e: book a class flow
 - [ ] Mobile responsive (owners check stats on phone)
 - [ ] Lighthouse ≥85
 

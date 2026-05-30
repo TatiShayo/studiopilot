@@ -78,17 +78,17 @@ export default async function ClassDetailPage({
 
   return (
     <div>
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex flex-wrap items-center gap-3 mb-6">
         <Link href="/dashboard/classes/upcoming">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="size-4" />
           </Button>
         </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold tracking-tight">
+        <div className="flex-1 min-w-0">
+          <h1 className="text-2xl font-bold tracking-tight truncate">
             {classType?.name ?? "Class"} · {format(new Date(sc.start_time), "EEEE, MMM d")}
           </h1>
-          <div className="flex items-center gap-3 mt-1 text-sm text-muted-foreground">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <Clock className="size-3.5" />
               {format(new Date(sc.start_time), "h:mm a")} – {format(new Date(sc.end_time), "h:mm a")}

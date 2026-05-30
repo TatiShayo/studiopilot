@@ -300,11 +300,11 @@ export default function PaymentsPage() {
 
       <Tabs defaultValue="transactions">
         <div className="flex items-center justify-between mb-6">
-          <TabsList>
+          <TabsList className="overflow-x-auto w-full sm:w-fit flex-nowrap">
             <TabsTrigger value="transactions">Transactions</TabsTrigger>
             <TabsTrigger value="memberships">Memberships</TabsTrigger>
             <TabsTrigger value="outstanding">Outstanding</TabsTrigger>
-            <TabsTrigger value="revenue">Revenue Dashboard</TabsTrigger>
+            <TabsTrigger value="revenue">Revenue</TabsTrigger>
           </TabsList>
         </div>
 

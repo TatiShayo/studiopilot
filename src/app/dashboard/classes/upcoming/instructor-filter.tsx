@@ -30,7 +30,7 @@ export function InstructorFilter({ staffList, selected }: InstructorFilterProps)
 
   return (
     <Select value={selected} onValueChange={handleChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full min-w-[140px] sm:w-[180px]">
         <SelectValue placeholder="All Instructors" />
       </SelectTrigger>
       <SelectContent>
