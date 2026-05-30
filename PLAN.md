@@ -67,7 +67,7 @@
 - [x] Stripe membership subscriptions: create Stripe Products for each membership tier in dashboard
 - [x] Membership billing: when client signs up for monthly membership → create Stripe Subscription → webhook updates memberships table
 - [x] Failed payment handling: webhook on invoice.payment_failed → mark membership as overdue → alert in dashboard
-- [ ] M-Pesa payment recording: manual entry with phone number field, transaction reference — store payment_method='mpesa' in payments table
+- [x] M-Pesa payment recording: manual entry with phone number field, transaction reference — store payment_method='mpesa' in payments table
 - [ ] Receipt generation: "Send Receipt" button on any payment → generates PDF receipt via react-pdf → emails to client
 - [ ] Outstanding balance report: PDF of all clients with unpaid dues — print-ready for collections
 
@@ -131,3 +131,48 @@
 - [ ] README.md + DEPLOY.md (setup, Supabase, Stripe, deploy to Vercel)
 - [ ] Pricing page: make sure Stripe checkout links work for all 3 tiers
 - [ ] Add "Import from Mindbody" notice on landing: "Migration assistance available — contact us"
+
+
+## PHASE 13: MEMBER APP & ONLINE BOOKING
+- [ ] Client self-booking portal fully polished at /portal/[studioSlug] — test end-to-end at 375px
+- [ ] Client login: members can create a simple account (email + magic link) to see their own booking history
+- [ ] Class series packages: purchase 10-class pack → stored as credits → each class booking deducts 1 credit
+- [ ] Package expiry: class packs expire 90 days after purchase → show expiry date in client portal
+- [ ] Gift vouchers: admin generates voucher code → client enters at checkout → deducts from balance
+- [ ] Waitlist self-management: client can join/leave waitlist from portal without calling the studio
+
+## PHASE 14: INSTRUCTOR PORTAL
+- [ ] /instructor/[staffId] — staff login via magic link email
+- [ ] Instructor dashboard: today's classes, who's booked, attendance check-in
+- [ ] Mobile check-in: instructor scans or taps client names to mark attendance from their phone
+- [ ] Instructor schedule: their weekly class calendar, with substitution request button
+- [ ] Class notes: instructor adds notes per class instance (e.g. "Focus was on breathing today")
+- [ ] Hours submitted: instructor submits hours for approval → admin approves → generates payroll entry
+
+## PHASE 15: AUTOMATION & WORKFLOWS
+- [ ] Vercel cron: vercel.json with cron jobs:
+  /api/cron/class-reminders (runs every day at 8am — sends 24hr reminders)
+  /api/cron/retention-alerts (runs every Monday — identifies at-risk clients, creates tasks for owner)
+  /api/cron/membership-renewals (runs daily — flags memberships expiring in 7 days)
+- [ ] At-risk client automation: when client flagged at-risk → auto-create task "Follow up with [name]" for studio owner
+- [ ] Birthday automation: on client birthday → send automated "Happy Birthday" email with complimentary class offer
+- [ ] Milestone automation: on client's 10th, 50th, 100th visit → auto-send congratulations email
+
+## PHASE 16: ADVANCED ANALYTICS
+- [ ] Class fill rate heatmap: 7-day × time grid showing which classes consistently fill vs which are empty
+- [ ] Revenue per square foot: enter studio size (m²) → calculate revenue / m² (useful for expansion decisions)
+- [ ] Client lifetime value (LTV): avg months × avg monthly spend per client segment
+- [ ] Churn prediction: flag clients who "used to come X times/month, now less than Y" — export list for win-back campaign
+- [ ] Instructor performance: bookings, attendance rate, client satisfaction score (survey after class)
+- [ ] Monthly business health score: composite of fill rate + retention rate + revenue growth
+
+## PHASE 17: LAUNCH PREP
+- [ ] Create README.md: setup, env vars, Supabase schema, Stripe products, Vercel deployment
+- [ ] Create DEPLOY.md: step-by-step production deployment checklist
+- [ ] "Switch from Mindbody" landing section: step-by-step migration guide ("Your data in ChamaVault in 30 minutes")
+- [ ] Pricing page: all 3 Stripe checkout links working (Starter $29, Pro $59, Studio $99)
+- [ ] Trial period: new accounts get 30-day full access (set subscription_tier='trial', expires_at = now + 30 days)
+- [ ] Trial expiry: when trial expires → email + in-app banner → prompt upgrade to prevent losing data
+- [ ] Lighthouse: run on /portal/[studioSlug] — must score ≥ 85 (this is the public-facing client page)
+- [ ] Write unit tests: booking capacity check, waitlist promotion, class cancellation email flow
+- [ ] Product Hunt assets in assets/product-hunt/: tagline, description, first comment

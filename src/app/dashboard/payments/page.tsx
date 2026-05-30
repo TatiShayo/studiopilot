@@ -28,7 +28,8 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, Search, Banknote, CreditCard, Smartphone, Building2, Crown, Calendar } from "lucide-react";
+import { Plus, Search, Banknote, CreditCard, Smartphone, Building2, Crown, Calendar, SendHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import { useEffect, useState, useRef } from "react";
 import type { Client, Payment, Membership } from "@/lib/types";
 import RevenueDashboard from "./revenue-dashboard";
@@ -54,6 +55,7 @@ export default function PaymentsPage() {
   const [mpesaRef, setMpesaRef] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [sendingReceiptId, setSendingReceiptId] = useState<string | null>(null);
   const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null);
 
   const [memberships, setMemberships] = useState<(Membership & { clients: Pick<Client, "id" | "name" | "email"> | null })[]>([]);
@@ -228,6 +230,27 @@ export default function PaymentsPage() {
       fetchMemberships();
     }
     setMemSaving(false);
+  };
+
+  const sendReceipt = async (paymentId: string) => {
+    setSendingReceiptId(paymentId);
+    try {
+      const res = await fetch("/api/payments/receipt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentId }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        toast.success("Receipt sent via email");
+      } else {
+        toast.error(json.error || "Failed to send receipt");
+      }
+    } catch {
+      toast.error("Network error sending receipt");
+    } finally {
+      setSendingReceiptId(null);
+    }
   };
 
   const methodBadge = (m: string) => {
@@ -488,6 +511,7 @@ export default function PaymentsPage() {
                       <TableHead>Method</TableHead>
                       <TableHead>Description</TableHead>
                       <TableHead className="text-right">Amount</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -508,6 +532,21 @@ export default function PaymentsPage() {
                         </TableCell>
                         <TableCell className="text-right font-bold">
                           {formatKes(p.amount_cents)}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            disabled={sendingReceiptId === p.id}
+                            onClick={() => sendReceipt(p.id)}
+                            title="Send receipt via email"
+                          >
+                            {sendingReceiptId === p.id ? (
+                              <span className="text-xs text-muted-foreground">Sending...</span>
+                            ) : (
+                              <SendHorizontal className="size-4" />
+                            )}
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}

@@ -1,15 +1,15 @@
 You are a senior fullstack engineer. Continue building studiopilot autonomously.
 
 SESSION STATE:
-Tasks remaining: 54
-Tasks completed: 39
-Current phase: PHASE 8: CLASS BOOKING ENGINE COMPLETION
+Tasks remaining: 77
+Tasks completed: 47
+Current phase: PHASE 9: PAYMENT SYSTEM COMPLETION
 Recent commits:
-0d6cb49 done: Waitlist promotion with email — auto-promote first waitlisted on cancel, Resend notification, both /book and /portal cancel triggers promotion
-bbad5d1 done: Public client portal /portal/[studioSlug] — studios table, portal layout with studio branding, full booking flow
-58cdb42 done: Mobile audit - fixed all pages at 375px responsive layout, check-in touch targets, table scroll, OG tags already present
-c671bf0 done: KES money formatting — staff page now uses formatKes instead of raw toLocaleString(); all money amounts across codebase use Intl.NumberFormat KES
-55d21f5 done: Fix TypeScript errors — replaced missing kesFormatter with formatKes, npm run build and tsc --noEmit both zero errors
+8544e13 done: M-Pesa payment recording with phone number and transaction reference fields added to payments table and recording form
+c9130cd done: Add to Calendar link in booking confirmation - Google Calendar URL generator, .ics generator, integrated into all 3 booking call sites
+1d8ba78 done: Class cancellation flow - enhanced cancel email with apology message and booking portal reschedule link
+1d06f70 done: Class reminder email - API route /api/cron/class-reminders queries classes tomorrow, emails all booked clients
+554596b done: Booking confirmation email (Resend) - enriched all 3 call sites with instructor name and cancel link; dashboard book-actions gets staff join and NEXT_PUBLIC_SITE_URL cancelUrl; /book and /portal call sites now pass instructor and cancelUrl
 
 KNOWN ISSUES FROM PREVIOUS SESSIONS:
 # StudioPilot Learnings & Known Issues
@@ -117,5 +117,5 @@ Search the web if stuck on an error.
 
 Build exactly to the PRODUCT SPECIFICATION above. Every page, feature, and design detail must match.
 
-You have 54 tasks remaining. Complete as many as possible before context runs out.
+You have 77 tasks remaining. Complete as many as possible before context runs out.
 Start now. First task. Go.
