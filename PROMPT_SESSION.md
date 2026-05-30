@@ -1,18 +1,24 @@
 You are a senior fullstack engineer. Continue building studiopilot autonomously.
 
 SESSION STATE:
-Tasks remaining: 67
-Tasks completed: 35
-Current phase: PHASE 7: PRODUCTION HARDENING
+Tasks remaining: 54
+Tasks completed: 39
+Current phase: PHASE 8: CLASS BOOKING ENGINE COMPLETION
 Recent commits:
+0d6cb49 done: Waitlist promotion with email — auto-promote first waitlisted on cancel, Resend notification, both /book and /portal cancel triggers promotion
+bbad5d1 done: Public client portal /portal/[studioSlug] — studios table, portal layout with studio branding, full booking flow
+58cdb42 done: Mobile audit - fixed all pages at 375px responsive layout, check-in touch targets, table scroll, OG tags already present
 c671bf0 done: KES money formatting — staff page now uses formatKes instead of raw toLocaleString(); all money amounts across codebase use Intl.NumberFormat KES
 55d21f5 done: Fix TypeScript errors — replaced missing kesFormatter with formatKes, npm run build and tsc --noEmit both zero errors
-966ac51 done: All 28 tasks complete — all phases checked off
-b4d5b19 done: Digital waiver signing - clients sign liability waiver before first class
-e02a442 done: Retention alerts - Send reminder email buttons for at-risk clients
 
 KNOWN ISSUES FROM PREVIOUS SESSIONS:
 # StudioPilot Learnings & Known Issues
+
+## Network Issue (2026-05-30)
+- Hit "Network connection lost" on session #5 but recovered (+2 tasks)
+- Now on session #6 (PHASE 7: PRODUCTION HARDENING)
+- 27 total "no progress" entries, but director's retry strategy works
+- STATUS: Not blocking — recovered once, retrying
 
 
 ═══ PRODUCT SPECIFICATION (from batch2-build-prompts) ═══
@@ -111,5 +117,5 @@ Search the web if stuck on an error.
 
 Build exactly to the PRODUCT SPECIFICATION above. Every page, feature, and design detail must match.
 
-You have 67 tasks remaining. Complete as many as possible before context runs out.
+You have 54 tasks remaining. Complete as many as possible before context runs out.
 Start now. First task. Go.

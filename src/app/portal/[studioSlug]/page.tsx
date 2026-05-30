@@ -19,6 +19,7 @@ import {
 import { addDays, startOfDay, format } from "date-fns";
 import Link from "next/link";
 import { formatKes } from "@/lib/format-currency";
+import { sendBookingEmail } from "@/lib/booking-email-action";
 
 interface ClientMatch {
   id: string;
@@ -118,7 +119,7 @@ export default function PortalPage() {
 
     const { data: sc } = await s
       .from("scheduled_classes")
-      .select("class_types(capacity)")
+      .select("start_time, class_types(capacity, name), staff(name)")
       .eq("id", classId)
       .single();
 
@@ -159,6 +160,17 @@ export default function PortalPage() {
         ...prev,
         [classId]: status === "waitlisted" ? "waitlisted" : "success",
       }));
+      if (status === "booked" && client.email && sc) {
+        sendBookingEmail({
+          to: client.email,
+          clientName: client.name,
+          className: (sc.class_types as any)?.name ?? "Class",
+          date: format(new Date(sc.start_time), "EEEE, MMMM d"),
+          time: format(new Date(sc.start_time), "h:mm a"),
+          instructor: (sc as any).staff?.name,
+          cancelUrl: `${window.location.origin}/portal`,
+        });
+      }
       fetchClasses(client.id);
     }
   };

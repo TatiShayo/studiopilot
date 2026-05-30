@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
-import { sendEmail } from "@/lib/email";
+import { sendEmail, sendBookingConfirmation } from "@/lib/email";
 
 async function promoteWaitlist(supabase: Awaited<ReturnType<typeof createClient>>, classId: string) {
   const { data: waitlisted } = await supabase
@@ -62,7 +62,7 @@ export async function bookClientIntoClass(formData: FormData) {
 
   const { data: sc } = await supabase
     .from("scheduled_classes")
-    .select("*, class_types(capacity)")
+    .select("*, class_types(capacity, name), staff(name)")
     .eq("id", classId)
     .single();
 
@@ -88,6 +88,30 @@ export async function bookClientIntoClass(formData: FormData) {
 
   if (error) {
     return { error: error.message };
+  }
+
+  if (status === "booked") {
+    const { data: clientData } = await supabase
+      .from("clients")
+      .select("email, name")
+      .eq("id", clientId)
+      .single();
+
+    const startTime = new Date(sc.start_time);
+
+    if (clientData?.email) {
+      const staffName = (sc as any).staff?.name;
+
+      await sendBookingConfirmation({
+        to: clientData.email,
+        clientName: clientData.name,
+        className: (sc.class_types as any)?.name ?? "Class",
+        date: startTime.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }),
+        time: startTime.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }),
+        instructor: staffName,
+        cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/dashboard/classes/${classId}`,
+      });
+    }
   }
 
   revalidatePath(`/dashboard/classes/${classId}`);

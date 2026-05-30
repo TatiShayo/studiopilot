@@ -38,3 +38,41 @@ export async function sendEmail({
     console.error("Resend error:", error);
   }
 }
+
+export async function sendBookingConfirmation({
+  to,
+  clientName,
+  className,
+  date,
+  time,
+  instructor,
+  location,
+  cancelUrl,
+}: {
+  to: string;
+  clientName: string;
+  className: string;
+  date: string;
+  time: string;
+  instructor?: string;
+  location?: string;
+  cancelUrl?: string;
+}) {
+  const text = `Hi ${clientName},
+
+You're booked!
+
+${className}
+${date} at ${time}${instructor ? ` with ${instructor}` : ""}${location ? ` at ${location}` : ""}
+
+${cancelUrl ? `Need to cancel? ${cancelUrl}` : ""}
+
+See you there!
+— StudioPilot`;
+
+  await sendEmail({
+    to,
+    subject: `Booked: ${className} on ${date}`,
+    text,
+  });
+}

@@ -19,6 +19,7 @@ import {
 import { addDays, startOfDay, format } from "date-fns";
 import Link from "next/link";
 import { formatKes } from "@/lib/format-currency";
+import { sendBookingEmail } from "@/lib/booking-email-action";
 
 interface ClientMatch {
   id: string;
@@ -120,7 +121,7 @@ export default function BookPage() {
 
     const { data: sc } = await s
       .from("scheduled_classes")
-      .select("class_types(capacity)")
+      .select("start_time, class_types(capacity, name), staff(name)")
       .eq("id", classId)
       .single();
 
@@ -161,6 +162,19 @@ export default function BookPage() {
         ...prev,
         [classId]: status === "waitlisted" ? "waitlisted" : "success",
       }));
+      if (status === "booked" && client.email && sc) {
+        const ctName = (sc.class_types as any)?.name ?? "Class";
+        const staffName = (sc as any).staff?.name;
+        sendBookingEmail({
+          to: client.email,
+          clientName: client.name,
+          className: ctName,
+          date: format(new Date(sc.start_time), "EEEE, MMMM d"),
+          time: format(new Date(sc.start_time), "h:mm a"),
+          instructor: staffName,
+          cancelUrl: `${window.location.origin}/book`,
+        });
+      }
       fetchClasses(client.id);
     }
   };
