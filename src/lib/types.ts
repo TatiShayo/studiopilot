@@ -120,3 +120,13 @@ export interface StaffHours {
   rate_kes: number;
   notes: string;
 }
+
+export interface Waiver {
+  id: string;
+  created_at: string;
+  client_id: string;
+  signed_name: string;
+  signed_at: string;
+  waiver_text: string;
+  accepted: boolean;
+}

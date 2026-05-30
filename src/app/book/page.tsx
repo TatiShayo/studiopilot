@@ -14,6 +14,7 @@ import {
   ArrowRight,
   CheckCircle2,
   AlertCircle,
+  FileText,
 } from "lucide-react";
 import { addDays, startOfDay, format } from "date-fns";
 import Link from "next/link";
@@ -38,6 +39,7 @@ interface UpcomingClass {
 export default function BookPage() {
   const [email, setEmail] = useState("");
   const [client, setClient] = useState<ClientMatch | null>(null);
+  const [hasWaiver, setHasWaiver] = useState(false);
   const [searching, setSearching] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
@@ -66,6 +68,12 @@ export default function BookPage() {
       .maybeSingle();
     if (data) {
       setClient(data as ClientMatch);
+      const { data: waiver } = await s
+        .from("waivers")
+        .select("id")
+        .eq("client_id", data.id)
+        .maybeSingle();
+      setHasWaiver(!!waiver);
     } else {
       setClient(null);
       setNotFound(true);
@@ -256,6 +264,27 @@ export default function BookPage() {
               </Button>
             </div>
 
+            {!hasWaiver && (
+              <Card className="mb-6 border-amber-500/30 bg-amber-500/5">
+                <CardContent className="py-4">
+                  <div className="flex items-start gap-3">
+                    <FileText className="size-5 text-amber-500 mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-medium text-sm">Waiver Required</p>
+                      <p className="text-xs text-muted-foreground mb-2">
+                        You must sign the liability waiver before booking classes.
+                      </p>
+                      <Link href="/waiver">
+                        <Button size="sm" variant="outline">
+                          Sign Waiver
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {loadingClasses ? (
               <p className="text-sm text-muted-foreground text-center py-12">
                 Loading upcoming classes...
@@ -330,13 +359,15 @@ export default function BookPage() {
                             return (
                               <Button
                                 size="sm"
-                                disabled={bs === "loading" || full}
+                                disabled={bs === "loading" || full || !hasWaiver}
                                 onClick={() => handleBook(sc.id)}
                               >
                                 {bs === "loading"
                                   ? "Booking..."
                                   : full
                                   ? "Full"
+                                  : !hasWaiver
+                                  ? "Sign Waiver First"
                                   : "Book"}
                                 <ArrowRight className="size-3.5" />
                               </Button>

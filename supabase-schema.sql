@@ -188,3 +188,21 @@ CREATE TABLE IF NOT EXISTS staff_hours (
 ALTER TABLE staff_hours ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Studio owners can manage staff hours" ON staff_hours
   FOR ALL USING (true);
+
+-- Digital waivers signed by clients before first class
+CREATE TABLE IF NOT EXISTS waivers (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  client_id uuid NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  signed_name text NOT NULL,
+  signed_at timestamptz NOT NULL DEFAULT now(),
+  waiver_text text NOT NULL DEFAULT 'I hereby release the studio from any liability for injuries sustained during classes. I confirm I am physically able to participate and will inform the instructor of any limitations.',
+  accepted boolean NOT NULL DEFAULT true,
+  UNIQUE(client_id)
+);
+
+ALTER TABLE waivers ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can insert waivers" ON waivers
+  FOR INSERT USING (true);
+CREATE POLICY "Studio owners can view waivers" ON waivers
+  FOR SELECT USING (true);
