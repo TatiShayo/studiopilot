@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS clients (
   status text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'vip')),
   tags text[] DEFAULT '{}',
   last_visit timestamptz,
-  birth_date date
+  birth_date date,
+  class_credits integer NOT NULL DEFAULT 0
 );
 
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;

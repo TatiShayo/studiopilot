@@ -14,6 +14,7 @@ export interface Client {
   tags: string[];
   last_visit: string | null;
   birth_date: string | null;
+  class_credits: number;
 }
 
 export interface MembershipPlan {

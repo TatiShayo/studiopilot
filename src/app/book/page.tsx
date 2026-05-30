@@ -22,6 +22,7 @@ interface ClientMatch {
   id: string;
   name: string;
   email: string;
+  class_credits: number;
 }
 
 interface UpcomingClass {
@@ -60,7 +61,7 @@ export default function BookPage() {
     setNotFound(false);
     const { data } = await s
       .from("clients")
-      .select("id, name, email")
+      .select("id, name, email, class_credits")
       .eq("email", email)
       .maybeSingle();
     if (data) {
@@ -132,6 +133,16 @@ export default function BookPage() {
       },
       { onConflict: "client_id,scheduled_class_id" }
     );
+
+    if (status === "booked" && client.class_credits > 0) {
+      await s
+        .from("clients")
+        .update({ class_credits: client.class_credits - 1 })
+        .eq("id", client.id);
+      setClient((prev) =>
+        prev ? { ...prev, class_credits: prev.class_credits - 1 } : prev
+      );
+    }
 
     if (error) {
       setBookingStates((prev) => ({ ...prev, [classId]: "error" }));
@@ -225,6 +236,9 @@ export default function BookPage() {
                 <h1 className="text-2xl font-bold tracking-tight">Book Classes</h1>
                 <p className="text-sm text-muted-foreground">
                   Welcome back, {client.name}
+                  {client.class_credits > 0 && (
+                    <> · <span className="font-medium text-primary">{client.class_credits} credits</span></>
+                  )}
                 </p>
               </div>
               <Button

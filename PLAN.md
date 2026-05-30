@@ -36,7 +36,7 @@
 - [x] Lighthouse ≥85
 
 ## PHASE 7: ADVANCED
-- [ ] Automated birthday emails to clients
+- [x] Automated birthday emails to clients
 - [ ] Class series packages (10-class pack)
 - [ ] AI class description generator
 - [ ] Retention alerts: flag clients who haven't visited in 30 days

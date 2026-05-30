@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Mail, Phone, Cake } from "lucide-react";
 import type { Client, Payment, Booking, ClientNote, ScheduledClass, ClassType, Membership } from "@/lib/types";
 import ClientBillingSection from "@/components/client-billing-section";
+import ClientClassCredits from "@/components/client-class-credits";
 import { AlertTriangle } from "lucide-react";
 
 const kesFormatter = new Intl.NumberFormat("en-KE", {
@@ -282,6 +283,8 @@ export default async function ClientProfilePage({
           )}
 
           <ClientBillingSection clientId={c.id} />
+
+          <ClientClassCredits clientId={c.id} credits={c.class_credits ?? 0} />
 
           <Card>
             <CardHeader>
