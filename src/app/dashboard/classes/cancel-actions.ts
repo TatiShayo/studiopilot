@@ -36,6 +36,7 @@ export async function cancelClass(formData: FormData) {
   if (bookings) {
     const classDate = format(new Date(sc.start_time), "EEEE, MMM d 'at' h:mm a");
     const className = (sc.class_types as any)?.name ?? "Class";
+    const portalUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ""}/book`;
 
     const emails = bookings
       .map((b: any) => b.clients?.email)
@@ -45,7 +46,15 @@ export async function cancelClass(formData: FormData) {
       await sendEmail({
         to: email,
         subject: `Cancelled: ${className} on ${classDate}`,
-        text: `Your ${className} class on ${classDate} has been cancelled. We apologize for the inconvenience.`,
+        text: `Hi,
+
+We're sorry to let you know that ${className} on ${classDate} has been cancelled.
+
+We apologize for any inconvenience this may cause. Please visit our booking portal to find an alternative class that works for you:
+
+${portalUrl}
+
+— StudioPilot`,
       });
     }
   }
