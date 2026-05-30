@@ -44,15 +44,15 @@
     44|
 
 ## PHASE 7: PRODUCTION HARDENING
-- [ ] npm run build: zero errors, zero warnings
-- [ ] npx tsc --noEmit: zero errors
-- [ ] Add loading.tsx to every dashboard route
-- [ ] Add error.tsx to every dashboard route with a helpful "Something went wrong" UI
+- [x] npm run build: zero errors, zero warnings
+- [x] npx tsc --noEmit: zero errors
+- [x] Add loading.tsx to every dashboard route
+- [x] Add error.tsx to every dashboard route with a helpful "Something went wrong" UI
+- [x] Add robots.txt and sitemap.xml
 - [ ] All API routes: add Zod validation on request bodies
 - [ ] All money amounts: use Intl.NumberFormat KES formatting consistently (never raw numbers)
 - [ ] Mobile audit: test every page at 375px — the schedule and check-in pages MUST work on phone
 - [ ] Add Open Graph tags to landing page
-- [ ] Add robots.txt and sitemap.xml
 
 ## PHASE 8: CLASS BOOKING ENGINE COMPLETION
 - [ ] Public client portal /portal/[studioSlug]: finish and test full booking flow end-to-end
@@ -84,6 +84,56 @@
 - [ ] Peak hours heatmap: 7-day x 24-hour grid colored by booking density
 - [ ] Monthly revenue report PDF: cover page + revenue chart + top classes + top clients — exportable
 - [ ] Staff payroll stub: hours logged x hourly rate = payout amount per staff member per month
+
+## PHASE 12: LAUNCH PREP
+- [ ] Seed data makes immediate sense: "Amani Wellness Studio" demo with real-looking data
+- [ ] Write unit tests: booking capacity check (no overbooking), waitlist promotion logic
+- [ ] Write e2e: signup → create class type → set schedule → book via client portal
+- [ ] README.md + DEPLOY.md (setup, Supabase, Stripe, deploy to Vercel)
+- [ ] Pricing page: make sure Stripe checkout links work for all 3 tiers
+- [ ] Add "Import from Mindbody" notice on landing: "Migration assistance available — contact us"
+
+## PHASE 7: PRODUCTION HARDENING
+- [ ] npm run build: zero errors, zero warnings
+- [ ] npx tsc --noEmit: zero errors
+- [ ] Add loading.tsx to every dashboard route
+- [ ] Add error.tsx to every dashboard route with a helpful "Something went wrong" UI
+- [ ] All API routes: add Zod validation on request bodies
+- [ ] All money amounts: use Intl.NumberFormat KES formatting consistently (never raw numbers)
+- [ ] Mobile audit: test every page at 375px — the schedule and check-in pages MUST work on phone
+- [ ] Add Open Graph tags to landing page
+- [ ] Add robots.txt and sitemap.xml
+
+## PHASE 8: CLASS BOOKING ENGINE COMPLETION
+- [ ] Public client portal /portal/[studioSlug]: finish and test full booking flow end-to-end
+- [ ] Waitlist promotion: when a booking is cancelled, auto-promote first waitlisted client and send email
+- [ ] Booking confirmation email (Resend): sends to client immediately after booking — include class name, date, time, instructor, location, cancel link
+- [ ] Class reminder email: 24 hours before class, send reminder to all booked clients
+  Implement as: API route /api/cron/class-reminders that queries class_instances WHERE instance_date = tomorrow
+- [ ] Class cancellation flow: cancel button on class detail → emails ALL booked clients with apology + reschedule link
+- [ ] Add to Calendar link in booking confirmation: Google Calendar URL + .ics download
+
+## PHASE 9: PAYMENT SYSTEM COMPLETION
+- [ ] Stripe membership subscriptions: create Stripe Products for each membership tier in dashboard
+- [ ] Membership billing: when client signs up for monthly membership → create Stripe Subscription → webhook updates memberships table
+- [ ] Failed payment handling: webhook on invoice.payment_failed → mark membership as overdue → alert in dashboard
+- [ ] M-Pesa payment recording: manual entry with phone number field, transaction reference — store payment_method='mpesa' in payments table
+- [ ] Receipt generation: "Send Receipt" button on any payment → generates PDF receipt via @react-pdf/renderer → emails to client
+- [ ] Outstanding balance report: PDF of all clients with unpaid dues — print-ready for collections
+
+## PHASE 10: CLIENT RETENTION SYSTEM
+- [ ] Retention score per client: formula = (visits_last_30d / avg_visits_per_30d) × 100
+- [ ] "At Risk" badge: clients with retention score < 40 automatically tagged
+- [ ] Automated win-back email: one-click "Send win-back email" on at-risk client → AI generates personalized message → sends via Resend
+- [ ] Birthday tracker: clients.date_of_birth field → dashboard shows "3 clients have birthdays this week" → one-click birthday email
+- [ ] Visit milestone badges: 10th visit, 50th visit, 100th visit → automatic congratulations email
+
+## PHASE 11: STAFF & REPORTING
+- [ ] Staff performance: bookings per instructor per month (bar chart)
+- [ ] Class fill rate: avg % capacity used per class type (shows which classes to add more of)
+- [ ] Peak hours heatmap: 7-day × 24-hour grid colored by booking density
+- [ ] Monthly revenue report PDF: cover page + revenue chart + top classes + top clients — exportable
+- [ ] Staff payroll stub: hours logged × hourly rate = payout amount per staff member per month
 
 ## PHASE 12: LAUNCH PREP
 - [ ] Seed data makes immediate sense: "Amani Wellness Studio" demo with real-looking data

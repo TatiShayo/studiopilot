@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table";
 import { Plus, X, Mail, Phone, User, Clock } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
+import { formatKes } from "@/lib/format-currency";
 import type { Staff, StaffHours } from "@/lib/types";
 
 export default function StaffPage() {
@@ -620,9 +621,9 @@ export default function StaffPage() {
                         })}
                       </TableCell>
                       <TableCell>{r.hours}h</TableCell>
-                      <TableCell>{r.rate_kes.toLocaleString()}</TableCell>
+                      <TableCell>{formatKes(r.rate_kes * 100)}</TableCell>
                       <TableCell>
-                        {(r.hours * r.rate_kes).toLocaleString()}
+                        {formatKes(r.hours * r.rate_kes * 100)}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
                         {r.notes}

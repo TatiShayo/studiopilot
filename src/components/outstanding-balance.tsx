@@ -8,12 +8,8 @@ import { AlertTriangle, ExternalLink, Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { formatKes } from "@/lib/format-currency";
 import type { Client, Payment, Membership } from "@/lib/types";
-
-const kesFormatter = new Intl.NumberFormat("en-KE", {
-  style: "currency",
-  currency: "KES",
-});
 
 interface OverdueClient {
   client: Client;
@@ -145,19 +141,19 @@ export default function OutstandingBalance() {
                     <p className="text-xs text-muted-foreground">
                       End date: {format(new Date(item.membership.end_date!), "MMM d, yyyy")}
                       {" · "}
-                      {kesFormatter.format(item.membership.price / 100)}/
+                      {formatKes(item.membership.price)}/
                       {item.membership.billing_cycle}
                     </p>
                     {item.lastPayment && (
                       <p className="text-xs text-muted-foreground">
                         Last payment:{" "}
                         {format(new Date(item.lastPayment.paid_at ?? item.lastPayment.created_at), "MMM d, yyyy")}{" "}
-                        · {kesFormatter.format(item.lastPayment.amount_cents / 100)}
+                        · {formatKes(item.lastPayment.amount_cents)}
                       </p>
                     )}
                     {item.paidThisMonth > 0 && (
                       <p className="text-xs text-green-600 dark:text-green-400">
-                        Paid this month: {kesFormatter.format(item.paidThisMonth / 100)}
+                        Paid this month: {formatKes(item.paidThisMonth)}
                       </p>
                     )}
                   </div>

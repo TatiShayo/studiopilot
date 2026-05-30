@@ -13,12 +13,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { format, startOfMonth, subMonths, startOfWeek, startOfDay, endOfDay, startOfYear } from "date-fns";
+import { formatKes, kesFormatter } from "@/lib/format-currency";
 import type { Payment } from "@/lib/types";
-
-const kesFormatter = new Intl.NumberFormat("en-KE", {
-  style: "currency",
-  currency: "KES",
-});
 
 interface MonthlyRevenue {
   month: string;
@@ -114,7 +110,7 @@ export default function RevenueDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-teal-500">
-              {kesFormatter.format(todayRevenue / 100)}
+              {formatKes(todayRevenue)}
             </p>
           </CardContent>
         </Card>
@@ -123,7 +119,7 @@ export default function RevenueDashboard() {
             <CardTitle className="text-sm text-muted-foreground">This Week</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{kesFormatter.format(weekRevenue / 100)}</p>
+            <p className="text-2xl font-bold">{formatKes(weekRevenue)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -131,7 +127,7 @@ export default function RevenueDashboard() {
             <CardTitle className="text-sm text-muted-foreground">This Month</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{kesFormatter.format(monthRevenue / 100)}</p>
+            <p className="text-2xl font-bold">{formatKes(monthRevenue)}</p>
           </CardContent>
         </Card>
         <Card>
@@ -139,7 +135,7 @@ export default function RevenueDashboard() {
             <CardTitle className="text-sm text-muted-foreground">This Year</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold">{kesFormatter.format(yearRevenue / 100)}</p>
+            <p className="text-2xl font-bold">{formatKes(yearRevenue)}</p>
           </CardContent>
         </Card>
       </div>
