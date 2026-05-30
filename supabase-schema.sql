@@ -171,3 +171,18 @@ CREATE TABLE IF NOT EXISTS recurring_schedules (
 ALTER TABLE recurring_schedules ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Studio owners can manage recurring schedules" ON recurring_schedules
   FOR ALL USING (true);
+
+-- Staff hours log
+CREATE TABLE IF NOT EXISTS staff_hours (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at timestamptz DEFAULT now(),
+  staff_id uuid NOT NULL REFERENCES staff(id) ON DELETE CASCADE,
+  date date NOT NULL,
+  hours numeric(4,1) NOT NULL CHECK (hours > 0),
+  rate_kes integer NOT NULL DEFAULT 0,
+  notes text DEFAULT ''
+);
+
+ALTER TABLE staff_hours ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Studio owners can manage staff hours" ON staff_hours
+  FOR ALL USING (true);

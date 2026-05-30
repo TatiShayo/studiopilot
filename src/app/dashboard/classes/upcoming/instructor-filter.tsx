@@ -17,7 +17,8 @@ interface InstructorFilterProps {
 export function InstructorFilter({ staffList, selected }: InstructorFilterProps) {
   const router = useRouter();
 
-  const handleChange = (value: string) => {
+  const handleChange = (value: string | null) => {
+    if (!value) return;
     const params = new URLSearchParams(window.location.search);
     if (value === "all") {
       params.delete("instructor");

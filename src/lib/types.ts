@@ -108,3 +108,13 @@ export interface Staff {
   photo_url: string | null;
   active: boolean;
 }
+
+export interface StaffHours {
+  id: string;
+  created_at: string;
+  staff_id: string;
+  date: string;
+  hours: number;
+  rate_kes: number;
+  notes: string;
+}

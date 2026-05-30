@@ -44,3 +44,5 @@
 [Sat 05/30/2026] Phase 4 Task 2: Membership billing complete - memberships table, Stripe webhook integration, Memberships tab, manual form
 
 [Sat 05/30/2026] Phase 4: PAYMENTS complete — Payment recording, Membership billing with Stripe, Outstanding balance, Revenue dashboard
+
+[Sat 05/30/2026] Phase 5: Staff profiles + Staff assignment to classes complete — photo URL, instructor filter on schedule

@@ -25,8 +25,8 @@
 - [x] Revenue dashboard: daily/weekly/monthly revenue chart
 
 ## PHASE 5: STAFF
-- [ ] Staff profiles: name, specialties, schedule
-- [ ] Staff assignment to classes
+- [x] Staff profiles: name, specialties, schedule
+- [x] Staff assignment to classes
 - [ ] Staff hours log
 
 ## PHASE 6: TESTING & POLISH
