@@ -61,12 +61,12 @@
 - [x] Class reminder email: 24 hours before class, send reminder to all booked clients
   Implement as: API route /api/cron/class-reminders that queries class_instances WHERE instance_date = tomorrow
 - [x] Class cancellation flow: cancel button on class detail → emails ALL booked clients with apology + reschedule link
-- [ ] Add to Calendar link in booking confirmation: Google Calendar URL + .ics download
+- [x] Add to Calendar link in booking confirmation: Google Calendar URL + .ics download
 
 ## PHASE 9: PAYMENT SYSTEM COMPLETION
-- [ ] Stripe membership subscriptions: create Stripe Products for each membership tier in dashboard
-- [ ] Membership billing: when client signs up for monthly membership → create Stripe Subscription → webhook updates memberships table
-- [ ] Failed payment handling: webhook on invoice.payment_failed → mark membership as overdue → alert in dashboard
+- [x] Stripe membership subscriptions: create Stripe Products for each membership tier in dashboard
+- [x] Membership billing: when client signs up for monthly membership → create Stripe Subscription → webhook updates memberships table
+- [x] Failed payment handling: webhook on invoice.payment_failed → mark membership as overdue → alert in dashboard
 - [ ] M-Pesa payment recording: manual entry with phone number field, transaction reference — store payment_method='mpesa' in payments table
 - [ ] Receipt generation: "Send Receipt" button on any payment → generates PDF receipt via react-pdf → emails to client
 - [ ] Outstanding balance report: PDF of all clients with unpaid dues — print-ready for collections

@@ -50,6 +50,8 @@ export default function PaymentsPage() {
   const [method, setMethod] = useState<string>("cash");
   const [description, setDescription] = useState("");
   const [paidAt, setPaidAt] = useState(new Date().toISOString().split("T")[0]);
+  const [mpesaPhone, setMpesaPhone] = useState("");
+  const [mpesaRef, setMpesaRef] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const supabaseRef = useRef<ReturnType<typeof createClient> | null>(null);
@@ -154,6 +156,8 @@ export default function PaymentsPage() {
       method,
       description: description || `${method.toUpperCase()} payment`,
       paid_at: new Date(paidAt).toISOString(),
+      mpesa_phone: method === "mpesa" ? mpesaPhone : "",
+      transaction_ref: method === "mpesa" ? mpesaRef : "",
     });
 
     if (insertError) {
@@ -165,6 +169,8 @@ export default function PaymentsPage() {
       setMethod("cash");
       setDescription("");
       setPaidAt(new Date().toISOString().split("T")[0]);
+      setMpesaPhone("");
+      setMpesaRef("");
       setShowForm(false);
       fetchPayments();
     }
@@ -397,6 +403,29 @@ export default function PaymentsPage() {
                       </Select>
                     </div>
                   </div>
+
+                  {method === "mpesa" && (
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="mpesaPhone">Phone Number</Label>
+                        <Input
+                          id="mpesaPhone"
+                          placeholder="07XX XXX XXX"
+                          value={mpesaPhone}
+                          onChange={(e) => setMpesaPhone(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="mpesaRef">Transaction Ref</Label>
+                        <Input
+                          id="mpesaRef"
+                          placeholder="RG8..."
+                          value={mpesaRef}
+                          onChange={(e) => setMpesaRef(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  )}
 
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="desc">Description</Label>
