@@ -27,7 +27,7 @@
 ## PHASE 5: STAFF
 - [x] Staff profiles: name, specialties, schedule
 - [x] Staff assignment to classes
-- [ ] Staff hours log
+- [x] Staff hours log
 
 ## PHASE 6: TESTING & POLISH
 - [ ] Unit tests for booking logic (no double-booking, capacity enforcement)

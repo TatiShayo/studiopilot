@@ -1,51 +1,115 @@
-You are continuing StudioPilot. Staff assignment to classes is built but uncommitted.
+You are a senior fullstack engineer. Continue building studiopilot autonomously.
 
-═══ FIRST: COMMIT EXISTING WORK ═══
-Run: git status --short
-If staff assignment photos/filters are uncommitted:
-  git add -A && git commit -m "done: Staff assignment - photo URL, instructor filter on schedule"
-Then read PLAN.md and mark [x] for:
-- Staff assignment to classes (if built)
-Then recount: grep -c '\[x\]' PLAN.md
+SESSION STATE:
+Tasks remaining: 9
+Tasks completed: 19
+Current phase: PHASE 6: TESTING & POLISH
+Recent commits:
+f793fec done: Staff hours log
+5053136 done: Staff assignment - photo URL, instructor filter on schedule
+e1cf070 done: Task 4 — Staff profiles at /dashboard/staff
+3b013a7 done: Task 3 — Revenue dashboard with 6-month chart + Today/Week/Month/Year cards
+81a0f4b Mark Task 2 done in PLAN.md and PROGRESS.md
 
-═══ CURRENT STATE ═══
-Should be 17 done / 11 remaining after commit.
-PHASE 5: STAFF — 1 left (hours log)
-PHASE 6: TESTING & POLISH — 4 left
-PHASE 7: ADVANCED — 6 left
+KNOWN ISSUES FROM PREVIOUS SESSIONS:
+# StudioPilot Learnings & Known Issues
 
-═══ REMAINING TASKS (build in order) ═══
 
-Task 1: Staff hours log
-- Page at /dashboard/staff (hours log section or separate page)
-- Table: date, hours worked, rate (KES), notes
-- Add hours form: date picker, hours input, rate, notes
-- Monthly total hours card
+═══ PRODUCT SPECIFICATION (from batch2-build-prompts) ═══
+## PROMPT 2 — BUILD STUDIOPILOT
+*(Open studiopilot/ in a new CMD → paste this)*
 
-Task 2: Unit tests for booking logic
-- npm install -D vitest if not installed
-- Tests: no double-booking, capacity enforcement, waitlist
-- tests/booking.test.ts
+---
 
-Task 3: E2E — book a class flow
-- npm install -D cypress if not installed
-- cypress/e2e/booking-flow.cy.ts
+```
+You are a senior fullstack engineer. Build StudioPilot — a complete gym/yoga/salon studio management SaaS — in this Next.js project. YOLO MODE: build everything, make all decisions, no questions.
 
-Task 4: Mobile responsive
-- All pages at 375px: tables → cards, sidebar → bottom nav
+═══════════════════════════════════════
+PRODUCT OVERVIEW
+═══════════════════════════════════════
+StudioPilot replaces Mindbody ($129–$300+/mo, predatory contracts, outdated UX) at $29/mo flat with month-to-month billing. Everything fitness and wellness studios need.
 
-Task 5: Lighthouse ≥85 — meta tags, aria, semantic HTML, contrast
+Tagline: "Run your studio. Not your software."
+Target: Yoga studios, gyms, dance schools, martial arts, pilates, personal trainers, salons.
 
-Task 6: Advanced features
-- AI class description generator at /api/ai/class-description
-- Retention alerts: 30+ day inactive clients, "Send Reminder"
-- Birthday automation
-- Class series packages
-- Digital waiver signing
+Pricing:
+- Starter ($29/mo): 1 location, unlimited clients, class scheduling, payments
+- Pro ($59/mo): 3 locations + staff management + waitlist + automated reminders
+- Studio ($99/mo): Unlimited locations + custom client portal + advanced analytics + API access
 
-═══ RULES ═══
-npm run build after every task. Must pass.
-git add -A && git commit -m "done: [task]" per task.
-Mark [x] in PLAN.md + PROGRESS.md. Skip after 2 failures.
+═══════════════════════════════════════
+TECH STACK
+═══════════════════════════════════════
+- Next.js 14 App Router + TypeScript
+- Supabase (auth + DB)
+- Stripe (subscriptions + membership payments)
+- OpenAI GPT-4o-mini (class description generator)
+- Resend (booking confirmations, reminders)
+- shadcn/ui + Tailwind (dark, teal accent #14b8a6)
+- Recharts (revenue charts)
+- date-fns + date-fns-tz (timezone-aware scheduling)
+- Framer Motion + Sonner
 
-Start: git status → commit → update PLAN.md → Task 1: Staff hours log.
+═══════════════════════════════════════
+ALL PAGES TO BUILD
+═══════════════════════════════════════
+
+1. LANDING PAGE (src/app/page.tsx)
+   - Navbar: logo, features, pricing, login, "Try Free 30 Days"
+   - Hero: "Run Your Studio. Not Your Software." — clean headline, show a scheduling calendar mockup, teal CTA
+   - Pain point section: "Mindbody charges $200/month AND locks you into annual contracts. StudioPilot: $29/month. Cancel anytime. No lock-in."
+   - Feature grid: 8 features (Class Scheduling, Client Profiles, Payments, Waitlists, Staff Management, Automated Reminders, Revenue Reports, Client Portal)
+   - For who: tabs switching between Yoga Studio / Gym / Dance School / Salon — each shows a slightly different feature highlight
+   - Comparison: StudioPilot vs Mindbody vs Acuity vs Pike13 (price + features table)
+   - Pricing: 3 cards (Starter $29 / Pro $59 / Studio $99) with Stripe checkout
+   - Testimonials: 3 from yoga studio owner, gym manager, dance instructor
+   - FAQ: 7 questions (can I import from Mindbody, does it work for multiple locations, etc.)
+   - Footer
+
+2. AUTH: login, signup, reset, callback (standard pattern)
+
+3. DASHBOARD (src/app/dashboard/page.tsx)
+   - Sidebar layout: logo, nav links (Dashboard, Schedule, Clients, Staff, Payments, Reports, Settings, Billing)
+   - Today's view: classes happening today as a timeline (8am Yoga with 12/15 spots, 10am HIIT with 8/20 spots), quick check-in buttons
+   - Stats cards: Active Members, Classes Today, Revenue This Week, New Clients This Month
+   - Upcoming schedule (next 7 days): mini calendar view with classes as colored chips
+   - Retention alert: "3 clients haven't visited in 30+ days" with their names and "Send reminder" buttons
+   - Quick action: "Create Class", "Add Client", "Record Payment"
+
+4. SCHEDULE (src/app/dashboard/schedule/page.tsx)
+   - Week view by default (Mon–Sun columns), with time slots as rows (6am–10pm)
+   - Classes appear as colored blocks per their class_type color
+   - Click class block → class detail drawer (who's booked, check-in, waitlist, cancel)
+   - "Add Class" button → modal with class type selector, instructor, date/time, repeat toggle
+   - Filters: by location, by instructor, by class type
+   - Month view toggle: shows classes as chips on calendar grid
+
+5. CLASS TYPES (src/app/dashboard/classes/page.tsx)
+   - Grid of class type cards: color swatch, name, duration, capacity, price, active/inactive toggle
+   - Add/edit class type: name, description, duration (15/30/45/60/90min/custom), capacity, price, color, category
+   - "Generate Description wi
+═══ END SPEC ═══
+
+STARTUP SEQUENCE (do this first, every session):
+1. Run: git log --oneline -10
+2. Run: npm run build 2>&1 | tail -20
+3. Run: npx tsc --noEmit 2>&1 | head -15
+4. Read PLAN.md — find the first unchecked [ ] task in the lowest-numbered phase
+5. Read LEARNINGS.md — avoid known blocked approaches
+
+LOOP PROTOCOL:
+Read PLAN.md → first [ ] task → implement it → run npm run build (must pass) →
+git add -A && git commit -m "done: [task name]" → mark [x] in PLAN.md →
+append to PROGRESS.md → move to next task IMMEDIATELY.
+
+Never stop between tasks.
+Never ask for confirmation.
+Never wait for input.
+If a task fails twice: write to LEARNINGS.md as BLOCKED, skip it, continue to next.
+Install any npm package you need: npm install [package].
+Search the web if stuck on an error.
+
+Build exactly to the PRODUCT SPECIFICATION above. Every page, feature, and design detail must match.
+
+You have 9 tasks remaining. Complete as many as possible before context runs out.
+Start now. First task. Go.
