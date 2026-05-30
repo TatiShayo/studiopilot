@@ -13,10 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Clock, Users, DollarSign } from "lucide-react";
+import { Plus, Clock, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { ClassType } from "@/lib/types";
 import { AIDescriptionButton } from "./ai-description-button";
+import { formatKes } from "@/lib/format-currency";
 
 export default function ClassTypesPage() {
   const [classTypes, setClassTypes] = useState<ClassType[]>([]);
@@ -147,7 +148,7 @@ export default function ClassTypesPage() {
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="price">Price (USD)</Label>
+                <Label htmlFor="price">Price (KES)</Label>
                 <Input
                   id="price"
                   type="number"
@@ -216,10 +217,7 @@ export default function ClassTypesPage() {
                   {ct.capacity}
                 </div>
                 {ct.price_cents > 0 && (
-                  <div className="flex items-center gap-1">
-                    <DollarSign className="size-3.5" />$
-                    {(ct.price_cents / 100).toFixed(2)}
-                  </div>
+                  <span className="text-sm font-medium">{formatKes(ct.price_cents)}</span>
                 )}
               </div>
               <Button

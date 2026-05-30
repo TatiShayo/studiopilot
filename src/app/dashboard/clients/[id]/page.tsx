@@ -15,11 +15,7 @@ import type { Client, Payment, Booking, ClientNote, ScheduledClass, ClassType, M
 import ClientBillingSection from "@/components/client-billing-section";
 import ClientClassCredits from "@/components/client-class-credits";
 import { AlertTriangle } from "lucide-react";
-
-const kesFormatter = new Intl.NumberFormat("en-KE", {
-  style: "currency",
-  currency: "KES",
-});
+import { formatKes } from "@/lib/format-currency";
 
 export default async function ClientProfilePage({
   params,
@@ -159,7 +155,7 @@ export default async function ClientProfilePage({
                         </p>
                       </div>
                       <span className="font-bold">
-                        {kesFormatter.format(p.amount_cents / 100)}
+                        {formatKes(p.amount_cents)}
                       </span>
                     </div>
                   ))}
@@ -262,7 +258,7 @@ export default async function ClientProfilePage({
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Price</span>
-                  <span>{kesFormatter.format(activeMembership.price / 100)}/{activeMembership.billing_cycle}</span>
+                  <span>{formatKes(activeMembership.price / 100)}/{activeMembership.billing_cycle}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Start</span>
@@ -306,7 +302,7 @@ export default async function ClientProfilePage({
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Total Paid</span>
                 <span>
-                  {kesFormatter.format(
+                  {formatKes(
                     ((payments as Payment[] | null)?.reduce(
                       (sum, p) => sum + p.amount_cents,
                       0

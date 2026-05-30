@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { CreditCard, Loader2 } from "lucide-react";
 import type { MembershipPlan } from "@/lib/types";
+import { formatKes } from "@/lib/format-currency";
 
 interface ClientBillingSectionProps {
   clientId: string;
@@ -83,7 +84,7 @@ export default function ClientBillingSection({ clientId }: ClientBillingSectionP
               <div>
                 <p className="text-sm font-medium">{plan.name}</p>
                 <p className="text-sm font-bold">
-                  ${(plan.price_cents / 100).toFixed(2)}{" "}
+                  {formatKes(plan.price_cents)}{" "}
                   <span className="text-muted-foreground font-normal">/month</span>
                 </p>
                 {plan.description && (

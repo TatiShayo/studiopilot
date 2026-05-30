@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/lib/supabase/server";
+import { z } from "zod";
+
+const checkoutSchema = z.object({
+  client_id: z.string().uuid(),
+  plan_id: z.string().uuid(),
+});
 
 export async function POST(request: NextRequest) {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -17,7 +23,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { client_id, plan_id } = await request.json();
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
+
+    const parsed = checkoutSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Missing or invalid client_id or plan_id" }, { status: 400 });
+    }
+
+    const { client_id, plan_id } = parsed.data;
 
     const { data: client } = await supabase
       .from("clients")

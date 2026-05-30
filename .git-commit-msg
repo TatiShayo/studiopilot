@@ -1,7 +1,3 @@
-done: Task 4 — Staff profiles at /dashboard/staff
-
-- Added phone and bio columns to staff table schema with migration
-- Updated Staff type with phone and bio fields
-- Created /dashboard/staff page with card grid, add/edit form, specialties chips, active toggle
+done: Fix TypeScript errors — replaced missing kesFormatter with formatKes, npm run build and tsc --noEmit both zero errors
 
 Co-authored-by: CommandCodeBot <noreply@commandcode.ai>

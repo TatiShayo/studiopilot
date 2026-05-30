@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Ticket, Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { formatKes } from "@/lib/format-currency";
 
 interface ClassCreditsProps {
   clientId: string;
@@ -124,7 +125,7 @@ export default function ClientClassCredits({ clientId, credits }: ClassCreditsPr
                   onClick={() => addCredits(p.count, p.price)}
                 >
                   <span>{p.label}</span>
-                  <span className="font-bold">${p.price}</span>
+                  <span className="font-bold">{formatKes(parseFloat(p.price) * 100)}</span>
                 </Button>
               ))}
             </div>
@@ -143,7 +144,7 @@ export default function ClientClassCredits({ clientId, credits }: ClassCreditsPr
                   />
                 </div>
                 <div className="flex-1">
-                  <Label className="text-xs">Price ($)</Label>
+                  <Label className="text-xs">Price (KES)</Label>
                   <Input
                     type="number"
                     min="0"

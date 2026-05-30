@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { addDays, startOfDay, format } from "date-fns";
 import Link from "next/link";
+import { formatKes } from "@/lib/format-currency";
 
 interface ClientMatch {
   id: string;
@@ -401,7 +402,7 @@ export default function BookPage() {
                                       {spots} / {ct?.capacity ?? "-"}
                                     </span>
                                     {ct && ct.price_cents > 0 && (
-                                      <span>${(ct.price_cents / 100).toFixed(2)}</span>
+                                      <span>{formatKes(ct.price_cents)}</span>
                                     )}
                                   </div>
                                 </div>

@@ -2,6 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
 
 export async function GET(request: Request) {
+  const authHeader = request.headers.get("authorization") ?? "";
+  const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+
+  if (!token || token !== process.env.CRON_SECRET) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const supabase = await createClient();
 
   const today = new Date();

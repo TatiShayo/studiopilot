@@ -34,12 +34,9 @@ import type { Client, Payment, Membership } from "@/lib/types";
 import RevenueDashboard from "./revenue-dashboard";
 import OutstandingBalance from "@/components/outstanding-balance";
 
-type PaymentWithClient = Payment & { clients: Pick<Client, "id" | "name" | "email"> | null };
+import { formatKes } from "@/lib/format-currency";
 
-const kesFormatter = new Intl.NumberFormat("en-KE", {
-  style: "currency",
-  currency: "KES",
-});
+type PaymentWithClient = Payment & { clients: Pick<Client, "id" | "name" | "email"> | null };
 
 export default function PaymentsPage() {
   const [payments, setPayments] = useState<PaymentWithClient[]>([]);
@@ -288,7 +285,7 @@ export default function PaymentsPage() {
             <div>
               <p className="text-sm text-muted-foreground">Total Revenue This Month</p>
               <p className="text-3xl font-bold text-teal-500">
-                {kesFormatter.format(thisMonthRevenue / 100)}
+                {formatKes(thisMonthRevenue)}
               </p>
             </div>
             <Button size="sm" onClick={() => setShowForm(!showForm)}>
@@ -481,7 +478,7 @@ export default function PaymentsPage() {
                           {p.description}
                         </TableCell>
                         <TableCell className="text-right font-bold">
-                          {kesFormatter.format(p.amount_cents / 100)}
+                          {formatKes(p.amount_cents)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -685,7 +682,7 @@ export default function PaymentsPage() {
                             : "—"}
                         </TableCell>
                         <TableCell className="text-right font-bold">
-                          {kesFormatter.format(m.price / 100)}
+                          {formatKes(m.price)}
                         </TableCell>
                         <TableCell>
                           <Badge

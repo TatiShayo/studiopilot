@@ -19,9 +19,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, DollarSign } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { MembershipPlan } from "@/lib/types";
+import { formatKes } from "@/lib/format-currency";
 
 export default function MembershipPlansPage() {
   const [plans, setPlans] = useState<MembershipPlan[]>([]);
@@ -129,7 +130,7 @@ export default function MembershipPlansPage() {
                 </Select>
               </div>
               <div className="flex flex-col gap-2">
-                <Label htmlFor="price">Price (USD)</Label>
+                <Label htmlFor="price">Price (KES)</Label>
                 <Input
                   id="price"
                   type="number"
@@ -184,7 +185,7 @@ export default function MembershipPlansPage() {
             <CardContent>
               <div className="flex items-baseline gap-1 mb-2">
                 <span className="text-2xl font-bold">
-                  ${(plan.price_cents / 100).toFixed(0)}
+                  {formatKes(plan.price_cents)}
                 </span>
                 <span className="text-sm text-muted-foreground">
                   {formatInterval(plan.interval)}

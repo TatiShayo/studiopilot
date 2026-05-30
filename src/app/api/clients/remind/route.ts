@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
+import { z } from "zod";
+
+const remindSchema = z.object({
+  clientId: z.string().uuid(),
+});
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -9,11 +14,19 @@ export async function POST(request: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { clientId } = await request.json();
-
-  if (!clientId) {
-    return Response.json({ error: "Missing clientId" }, { status: 400 });
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return Response.json({ error: "Invalid JSON" }, { status: 400 });
   }
+
+  const parsed = remindSchema.safeParse(body);
+  if (!parsed.success) {
+    return Response.json({ error: "Missing or invalid clientId" }, { status: 400 });
+  }
+
+  const { clientId } = parsed.data;
 
   const { data: client } = await supabase
     .from("clients")
