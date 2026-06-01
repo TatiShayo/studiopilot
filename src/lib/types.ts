@@ -25,6 +25,7 @@ export interface Client {
   last_visit: string | null;
   birth_date: string | null;
   class_credits: number;
+  retention_score: number;
 }
 
 export interface MembershipPlan {
