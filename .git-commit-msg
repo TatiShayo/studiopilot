@@ -1,0 +1,3 @@
+done: Fix TypeScript errors — replaced missing kesFormatter with formatKes, npm run build and tsc --noEmit both zero errors
+
+Co-authored-by: CommandCodeBot <noreply@commandcode.ai>

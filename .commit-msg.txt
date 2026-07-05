@@ -1,0 +1,3 @@
+done: KES money formatting — staff page now uses formatKes instead of raw toLocaleString(); all money amounts across codebase use Intl.NumberFormat KES
+
+Co-authored-by: CommandCodeBot <noreply@commandcode.ai>
