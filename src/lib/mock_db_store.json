@@ -1,0 +1,678 @@
+{
+  "profiles": [],
+  "locations": [
+    {
+      "id": "loc-1",
+      "name": "Downtown Sanctuary",
+      "address": "123 Main St, Downtown",
+      "timezone": "America/New_York",
+      "created_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "loc-2",
+      "name": "Uptown Studio",
+      "address": "456 Park Ave, Uptown",
+      "timezone": "America/New_York",
+      "created_at": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "clients": [
+    {
+      "id": "client-1",
+      "first_name": "Alice",
+      "last_name": "Smith",
+      "email": "alice@example.com",
+      "phone": "(555) 123-4567",
+      "membership_tier": "Starter",
+      "join_date": "2026-01-15T10:00:00Z",
+      "notes": "Prefers morning classes. Recovering from mild wrist injury.",
+      "is_active": true
+    },
+    {
+      "id": "client-2",
+      "first_name": "Bob",
+      "last_name": "Johnson",
+      "email": "bob@example.com",
+      "phone": "(555) 234-5678",
+      "membership_tier": "Pro",
+      "join_date": "2026-02-10T09:30:00Z",
+      "notes": "Interested in private coaching. Likes intense workouts.",
+      "is_active": true
+    },
+    {
+      "id": "client-3",
+      "first_name": "Charlie",
+      "last_name": "Brown",
+      "email": "charlie@example.com",
+      "phone": "(555) 345-6789",
+      "membership_tier": "None",
+      "join_date": "2026-03-01T14:00:00Z",
+      "notes": "Always brings his own mat.",
+      "is_active": true
+    },
+    {
+      "id": "client-4",
+      "first_name": "Diana",
+      "last_name": "Prince",
+      "email": "diana@example.com",
+      "phone": "(555) 456-7890",
+      "membership_tier": "VIP",
+      "join_date": "2026-01-01T08:00:00Z",
+      "notes": "Loyal client since day one. Prefers weekend slots.",
+      "is_active": true
+    },
+    {
+      "id": "client-5",
+      "first_name": "Evan",
+      "last_name": "Wright",
+      "email": "evan@example.com",
+      "phone": "(555) 567-8901",
+      "membership_tier": "Studio",
+      "join_date": "2026-04-12T11:15:00Z",
+      "notes": "",
+      "is_active": true
+    },
+    {
+      "id": "client-6",
+      "first_name": "Fiona",
+      "last_name": "Gallagher",
+      "email": "fiona@example.com",
+      "phone": "(555) 678-9012",
+      "membership_tier": "Starter",
+      "join_date": "2026-05-20T17:30:00Z",
+      "notes": "Prefers evening sessions.",
+      "is_active": true
+    },
+    {
+      "id": "client-7",
+      "first_name": "George",
+      "last_name": "Cooper",
+      "email": "george@example.com",
+      "phone": "(555) 789-0123",
+      "membership_tier": "None",
+      "join_date": "2026-06-01T12:00:00Z",
+      "notes": "Temporarily paused due to travel.",
+      "is_active": false
+    },
+    {
+      "id": "client-8",
+      "first_name": "Hannah",
+      "last_name": "Abbott",
+      "email": "hannah@example.com",
+      "phone": "(555) 890-1234",
+      "membership_tier": "Pro",
+      "join_date": "2026-03-15T09:00:00Z",
+      "notes": "Loves yoga flow, does not like loud music.",
+      "is_active": true
+    },
+    {
+      "id": "client-9",
+      "first_name": "Ian",
+      "last_name": "Malcolm",
+      "email": "ian@example.com",
+      "phone": "(555) 901-2345",
+      "membership_tier": "Studio",
+      "join_date": "2026-02-28T15:45:00Z",
+      "notes": "Life finds a way. Prefers hot yoga.",
+      "is_active": true
+    },
+    {
+      "id": "client-10",
+      "first_name": "Julia",
+      "last_name": "Roberts",
+      "email": "julia@example.com",
+      "phone": "(555) 012-3456",
+      "membership_tier": "None",
+      "join_date": "2026-05-05T10:30:00Z",
+      "notes": "",
+      "is_active": true
+    },
+    {
+      "id": "client-11",
+      "first_name": "Kevin",
+      "last_name": "Bacon",
+      "email": "kevin@example.com",
+      "phone": "(555) 111-2222",
+      "membership_tier": "Starter",
+      "join_date": "2026-04-01T08:00:00Z",
+      "notes": "6 degrees of scheduling.",
+      "is_active": true
+    },
+    {
+      "id": "client-12",
+      "first_name": "Laura",
+      "last_name": "Croft",
+      "email": "laura@example.com",
+      "phone": "(555) 222-3333",
+      "membership_tier": "VIP",
+      "join_date": "2026-01-10T09:00:00Z",
+      "notes": "Extremely active, high fitness level.",
+      "is_active": true
+    },
+    {
+      "id": "client-13",
+      "first_name": "Mike",
+      "last_name": "Tyson",
+      "email": "mike@example.com",
+      "phone": "(555) 333-4444",
+      "membership_tier": "None",
+      "join_date": "2026-06-15T16:00:00Z",
+      "notes": "Prefers boxing/HIIT.",
+      "is_active": true
+    },
+    {
+      "id": "client-14",
+      "first_name": "Nina",
+      "last_name": "Simone",
+      "email": "nina@example.com",
+      "phone": "(555) 444-5555",
+      "membership_tier": "Pro",
+      "join_date": "2026-03-22T11:00:00Z",
+      "notes": "Enjoys slow-paced stretching classes.",
+      "is_active": true
+    },
+    {
+      "id": "client-15",
+      "first_name": "Oscar",
+      "last_name": "Wilde",
+      "email": "oscar@example.com",
+      "phone": "(555) 555-6666",
+      "membership_tier": "None",
+      "join_date": "2026-05-18T14:30:00Z",
+      "notes": "Prefers aesthetics and design workshops.",
+      "is_active": false
+    }
+  ],
+  "class_types": [
+    {
+      "id": "ct-1",
+      "name": "Vinyasa Flow Yoga",
+      "description": "A dynamic flow connecting movement with breath. All levels welcome.",
+      "duration_minutes": 60,
+      "capacity": 10,
+      "price": 25.00,
+      "color": "#14b8a6"
+    },
+    {
+      "id": "ct-2",
+      "name": "HIIT Cardio Blast",
+      "description": "High intensity interval training to boost metabolism and burn calories.",
+      "duration_minutes": 45,
+      "capacity": 12,
+      "price": 20.00,
+      "color": "#f43f5e"
+    },
+    {
+      "id": "ct-3",
+      "name": "Reformer Pilates",
+      "description": "Core strength, stability, and control using reformer machines.",
+      "duration_minutes": 50,
+      "capacity": 8,
+      "price": 35.00,
+      "color": "#3b82f6"
+    }
+  ],
+  "staff": [
+    {
+      "id": "staff-1",
+      "name": "Sarah Jenkins",
+      "email": "sarah@studiopilot.com",
+      "specialties": "Vinyasa Flow, Yin Yoga, Pilates",
+      "is_active": true,
+      "created_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "staff-2",
+      "name": "Marcus Vance",
+      "email": "marcus@studiopilot.com",
+      "specialties": "HIIT, Strength Training, Kettlebell",
+      "is_active": true,
+      "created_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "staff-3",
+      "name": "Elena Rostova",
+      "email": "elena@studiopilot.com",
+      "specialties": "Reformer Pilates, Barre, Stretch",
+      "is_active": true,
+      "created_at": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "class_schedule": [
+    {
+      "id": "sched-1",
+      "class_type_id": "ct-1",
+      "instructor_id": "staff-1",
+      "start_time": "09:00",
+      "end_time": "10:00",
+      "location_id": "loc-1",
+      "is_recurring": true,
+      "day_of_week": 1
+    },
+    {
+      "id": "sched-2",
+      "class_type_id": "ct-2",
+      "instructor_id": "staff-2",
+      "start_time": "12:00",
+      "end_time": "12:45",
+      "location_id": "loc-1",
+      "is_recurring": true,
+      "day_of_week": 1
+    },
+    {
+      "id": "sched-3",
+      "class_type_id": "ct-3",
+      "instructor_id": "staff-3",
+      "start_time": "10:00",
+      "end_time": "10:50",
+      "location_id": "loc-2",
+      "is_recurring": true,
+      "day_of_week": 2
+    },
+    {
+      "id": "sched-4",
+      "class_type_id": "ct-1",
+      "instructor_id": "staff-1",
+      "start_time": "09:00",
+      "end_time": "10:00",
+      "location_id": "loc-1",
+      "is_recurring": true,
+      "day_of_week": 3
+    },
+    {
+      "id": "sched-5",
+      "class_type_id": "ct-2",
+      "instructor_id": "staff-2",
+      "start_time": "18:00",
+      "end_time": "18:45",
+      "location_id": "loc-1",
+      "is_recurring": true,
+      "day_of_week": 4
+    },
+    {
+      "id": "sched-6",
+      "class_type_id": "ct-3",
+      "instructor_id": "staff-3",
+      "start_time": "10:00",
+      "end_time": "10:50",
+      "location_id": "loc-2",
+      "is_recurring": true,
+      "day_of_week": 5
+    },
+    {
+      "id": "sched-7",
+      "class_type_id": "ct-1",
+      "instructor_id": "staff-3",
+      "start_time": "08:30",
+      "end_time": "09:30",
+      "location_id": "loc-2",
+      "is_recurring": true,
+      "day_of_week": 6
+    }
+  ],
+  "class_instances": [
+    {
+      "id": "inst-1",
+      "class_schedule_id": "sched-1",
+      "date": "2026-06-29",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-2",
+      "class_schedule_id": "sched-2",
+      "date": "2026-06-29",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-3",
+      "class_schedule_id": "sched-3",
+      "date": "2026-06-30",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-4",
+      "class_schedule_id": "sched-4",
+      "date": "2026-07-01",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-5",
+      "class_schedule_id": "sched-5",
+      "date": "2026-07-02",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-6",
+      "class_schedule_id": "sched-6",
+      "date": "2026-07-03",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-7",
+      "class_schedule_id": "sched-7",
+      "date": "2026-07-04",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-8",
+      "class_schedule_id": "sched-1",
+      "date": "2026-07-06",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-9",
+      "class_schedule_id": "sched-2",
+      "date": "2026-07-06",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-10",
+      "class_schedule_id": "sched-3",
+      "date": "2026-07-07",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-11",
+      "class_schedule_id": "sched-4",
+      "date": "2026-07-08",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-12",
+      "class_schedule_id": "sched-5",
+      "date": "2026-07-09",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-13",
+      "class_schedule_id": "sched-6",
+      "date": "2026-07-10",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    },
+    {
+      "id": "inst-14",
+      "class_schedule_id": "sched-7",
+      "date": "2026-07-11",
+      "is_cancelled": false,
+      "cancellation_reason": ""
+    }
+  ],
+  "bookings": [
+    {
+      "id": "bk-1",
+      "client_id": "client-1",
+      "class_instance_id": "inst-1",
+      "status": "booked",
+      "booked_at": "2026-06-28T09:00:00Z"
+    },
+    {
+      "id": "bk-2",
+      "client_id": "client-2",
+      "class_instance_id": "inst-1",
+      "status": "booked",
+      "booked_at": "2026-06-28T10:00:00Z"
+    },
+    {
+      "id": "bk-3",
+      "client_id": "client-3",
+      "class_instance_id": "inst-1",
+      "status": "booked",
+      "booked_at": "2026-06-28T11:00:00Z"
+    },
+    {
+      "id": "bk-4",
+      "client_id": "client-4",
+      "class_instance_id": "inst-1",
+      "status": "booked",
+      "booked_at": "2026-06-28T12:00:00Z"
+    },
+    {
+      "id": "bk-5",
+      "client_id": "client-5",
+      "class_instance_id": "inst-2",
+      "status": "booked",
+      "booked_at": "2026-06-28T14:00:00Z"
+    },
+    {
+      "id": "bk-6",
+      "client_id": "client-8",
+      "class_instance_id": "inst-2",
+      "status": "booked",
+      "booked_at": "2026-06-28T14:30:00Z"
+    },
+    {
+      "id": "bk-7",
+      "client_id": "client-10",
+      "class_instance_id": "inst-2",
+      "status": "booked",
+      "booked_at": "2026-06-28T15:00:00Z"
+    },
+    {
+      "id": "bk-8",
+      "client_id": "client-9",
+      "class_instance_id": "inst-3",
+      "status": "booked",
+      "booked_at": "2026-06-29T08:00:00Z"
+    },
+    {
+      "id": "bk-9",
+      "client_id": "client-12",
+      "class_instance_id": "inst-3",
+      "status": "booked",
+      "booked_at": "2026-06-29T08:15:00Z"
+    },
+    {
+      "id": "bk-10",
+      "client_id": "client-14",
+      "class_instance_id": "inst-3",
+      "status": "booked",
+      "booked_at": "2026-06-29T09:00:00Z"
+    }
+  ],
+  "payments": [
+    {
+      "id": "pay-1",
+      "client_id": "client-1",
+      "amount": 29.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Starter Membership Renewal",
+      "paid_at": "2026-06-15T00:00:00Z"
+    },
+    {
+      "id": "pay-2",
+      "client_id": "client-2",
+      "amount": 59.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Pro Membership Renewal",
+      "paid_at": "2026-06-10T00:00:00Z"
+    },
+    {
+      "id": "pay-3",
+      "client_id": "client-4",
+      "amount": 99.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Studio Membership Renewal",
+      "paid_at": "2026-06-01T00:00:00Z"
+    },
+    {
+      "id": "pay-4",
+      "client_id": "client-5",
+      "amount": 99.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Studio Membership Renewal",
+      "paid_at": "2026-06-12T00:00:00Z"
+    },
+    {
+      "id": "pay-5",
+      "client_id": "client-8",
+      "amount": 59.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Pro Membership Renewal",
+      "paid_at": "2026-06-15T00:00:00Z"
+    },
+    {
+      "id": "pay-6",
+      "client_id": "client-9",
+      "amount": 99.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Studio Membership Renewal",
+      "paid_at": "2026-06-28T00:00:00Z"
+    },
+    {
+      "id": "pay-7",
+      "client_id": "client-12",
+      "amount": 99.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Studio Membership Renewal",
+      "paid_at": "2026-06-10T00:00:00Z"
+    },
+    {
+      "id": "pay-8",
+      "client_id": "client-14",
+      "amount": 59.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Pro Membership Renewal",
+      "paid_at": "2026-06-22T00:00:00Z"
+    },
+    {
+      "id": "pay-9",
+      "client_id": "client-3",
+      "amount": 25.00,
+      "currency": "USD",
+      "method": "cash",
+      "description": "Vinyasa Flow Drop-in",
+      "paid_at": "2026-06-20T00:00:00Z"
+    },
+    {
+      "id": "pay-10",
+      "client_id": "client-10",
+      "amount": 20.00,
+      "currency": "USD",
+      "method": "M-Pesa",
+      "description": "HIIT Cardio Drop-in",
+      "paid_at": "2026-06-22T00:00:00Z"
+    },
+    {
+      "id": "pay-11",
+      "client_id": "client-13",
+      "amount": 35.00,
+      "currency": "USD",
+      "method": "cash",
+      "description": "Reformer Pilates Drop-in",
+      "paid_at": "2026-06-24T00:00:00Z"
+    },
+    {
+      "id": "pay-12",
+      "client_id": "client-6",
+      "amount": 29.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Starter Membership Renewal",
+      "paid_at": "2026-06-20T00:00:00Z"
+    },
+    {
+      "id": "pay-13",
+      "client_id": "client-11",
+      "amount": 29.00,
+      "currency": "USD",
+      "method": "card",
+      "description": "Starter Membership Renewal",
+      "paid_at": "2026-06-01T00:00:00Z"
+    }
+  ],
+  "memberships": [
+    {
+      "id": "memb-1",
+      "client_id": "client-1",
+      "plan_name": "Starter",
+      "price": 29.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-01-15",
+      "stripe_subscription_id": "sub_1"
+    },
+    {
+      "id": "memb-2",
+      "client_id": "client-2",
+      "plan_name": "Pro",
+      "price": 59.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-02-10",
+      "stripe_subscription_id": "sub_2"
+    },
+    {
+      "id": "memb-3",
+      "client_id": "client-4",
+      "plan_name": "Studio",
+      "price": 99.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-01-01",
+      "stripe_subscription_id": "sub_3"
+    },
+    {
+      "id": "memb-4",
+      "client_id": "client-5",
+      "plan_name": "Studio",
+      "price": 99.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-04-12",
+      "stripe_subscription_id": "sub_4"
+    },
+    {
+      "id": "memb-5",
+      "client_id": "client-8",
+      "plan_name": "Pro",
+      "price": 59.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-03-15",
+      "stripe_subscription_id": "sub_5"
+    },
+    {
+      "id": "memb-6",
+      "client_id": "client-9",
+      "plan_name": "Studio",
+      "price": 99.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-02-28",
+      "stripe_subscription_id": "sub_6"
+    },
+    {
+      "id": "memb-7",
+      "client_id": "client-12",
+      "plan_name": "Studio",
+      "price": 99.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-01-10",
+      "stripe_subscription_id": "sub_7"
+    },
+    {
+      "id": "memb-8",
+      "client_id": "client-14",
+      "plan_name": "Pro",
+      "price": 59.00,
+      "billing_cycle": "monthly",
+      "start_date": "2026-03-22",
+      "stripe_subscription_id": "sub_8"
+    }
+  ]
+}
