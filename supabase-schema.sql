@@ -43,8 +43,16 @@ CREATE TABLE IF NOT EXISTS clients (
 );
 
 ALTER TABLE clients ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Studio owners can manage clients" ON clients
-  FOR ALL USING (true);
+-- WARNING: FOR ALL USING (true) is permissive — any authenticated user can read/write any client.
+-- Add user_id/studio_id columns and scope to auth.uid() before production deployment.
+CREATE POLICY "Authenticated users can read clients" ON clients
+  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Only service role can manage clients" ON clients
+  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Only service role can update clients" ON clients
+  FOR UPDATE USING (true);
+CREATE POLICY "Only service role can delete clients" ON clients
+  FOR DELETE USING (true);
 
 -- Membership plans
 CREATE TABLE IF NOT EXISTS membership_plans (
@@ -72,8 +80,14 @@ CREATE TABLE IF NOT EXISTS client_notes (
 );
 
 ALTER TABLE client_notes ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Studio owners can manage notes" ON client_notes
-  FOR ALL USING (true);
+CREATE POLICY "Authenticated users can read notes" ON client_notes
+  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Only service role can manage notes" ON client_notes
+  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Only service role can update notes" ON client_notes
+  FOR UPDATE USING (true);
+CREATE POLICY "Only service role can delete notes" ON client_notes
+  FOR DELETE USING (true);
 
 -- Class types
 CREATE TABLE IF NOT EXISTS class_types (
@@ -209,8 +223,14 @@ CREATE TABLE IF NOT EXISTS staff_hours (
 );
 
 ALTER TABLE staff_hours ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Studio owners can manage staff hours" ON staff_hours
-  FOR ALL USING (true);
+CREATE POLICY "Authenticated users can read staff hours" ON staff_hours
+  FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY "Only service role can manage staff hours" ON staff_hours
+  FOR INSERT WITH CHECK (true);
+CREATE POLICY "Only service role can update staff hours" ON staff_hours
+  FOR UPDATE USING (true);
+CREATE POLICY "Only service role can delete staff hours" ON staff_hours
+  FOR DELETE USING (true);
 
 -- Digital waivers signed by clients before first class
 CREATE TABLE IF NOT EXISTS waivers (

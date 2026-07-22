@@ -19,9 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "next/cache": ["./tests/mocks/next-cache.ts"],
-      "next/server": ["./tests/mocks/next-server.ts"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -32,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "cypress", "cypress.config.ts"]
 }

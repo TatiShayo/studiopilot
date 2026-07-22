@@ -8,7 +8,7 @@ import { Progress, ProgressTrack, ProgressIndicator } from "@/components/ui/prog
 import { ArrowLeft, TrendingUp, Calendar } from "lucide-react";
 import { calculateRetentionScore } from "@/lib/retention";
 import type { Client, Booking } from "@/lib/types";
-import BirthdayTracker from "./_components/birthday-tracker";
+import { BirthdayTracker } from "./_components/birthday-tracker";
 import { WinBackAction } from "./_components/win-back-action";
 
 export default async function RetentionDashboardPage() {

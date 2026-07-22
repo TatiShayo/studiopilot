@@ -1,7 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import assert from 'assert';
-import { describe, it, before, after } from 'node:test';
+import { describe, it, beforeAll as before, afterAll as after, expect } from 'vitest';
+
+// Clear environment variables that might trigger Supabase integration so we test purely local database
+delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+delete process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+vi.mock("next/cache", () => ({
+  revalidatePath: vi.fn(),
+}));
 
 // Import our system components
 import { db, readMockDB, writeMockDB, MockDBStore, ClassInstance, ClassSchedule, ClassType } from '../src/lib/db';
@@ -16,10 +25,6 @@ import { NextRequest } from 'next/server';
 
 const MOCK_DB_PATH = path.join(process.cwd(), 'src', 'lib', 'mock_db_store.json');
 const BACKUP_DB_PATH = path.join(process.cwd(), 'src', 'lib', 'mock_db_store.json.backup');
-
-// Clear environment variables that might trigger Supabase integration so we test purely local database
-delete process.env.NEXT_PUBLIC_SUPABASE_URL;
-delete process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 let backupExists = false;
 

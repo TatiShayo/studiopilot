@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 
 function makeQuery(data: unknown = null, error: unknown = null) {
-  const chain: Record<string, vi.Mock> = {
+  const chain: Record<string, Mock> = {
     select: vi.fn().mockReturnThis(),
     eq: vi.fn().mockReturnThis(),
     in: vi.fn().mockReturnThis(),
@@ -17,11 +17,11 @@ function makeQuery(data: unknown = null, error: unknown = null) {
 }
 
 function makeCountQuery(count: number) {
-  const chain: Record<string, vi.Mock> = {
+  const chain: Record<string, Mock> = {
     select: vi.fn((_cols: string, opts?: { count: string; head: boolean }) => {
       if (opts?.count) {
         // Return a new chain that resolves with count
-        const inner: Record<string, vi.Mock> = {
+        const inner: Record<string, Mock> = {
           eq: vi.fn().mockReturnThis(),
           in: vi.fn().mockResolvedValue({ count, data: [], error: null }),
           order: vi.fn().mockReturnThis(),
@@ -59,7 +59,7 @@ function makeCountQuery(count: number) {
   return chain;
 }
 
-let mockFrom: ReturnType<typeof vi.fn>;
+let mockFrom: Mock;
 
 vi.mock("@/lib/supabase/server", () => ({
   createClient: vi.fn(() => Promise.resolve({ from: mockFrom })),

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -70,9 +71,9 @@ export default function ClientBillingSection({ clientId }: ClientBillingSectionP
         ) : plans.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             No monthly plans available.{" "}
-            <a href="/dashboard/clients/plans" className="underline">
+            <Link href="/dashboard/clients/plans" className="underline">
               Create one
-            </a>
+            </Link>
             .
           </p>
         ) : (
