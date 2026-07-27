@@ -3,7 +3,7 @@
   "run_id": "hermes-2026-07-27-v6-studiopilot",
   "project": "studiopilot",
   "phase": "4.0",
-  "produced_at": "2026-07-27T22:08:44.042971",
+  "produced_at": "2026-07-27T22:32:02.927868",
   "runner_tier": "T1",
   "mode": "static-only",
   "findings": []
