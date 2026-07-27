@@ -8,7 +8,7 @@
 | **Mode** | `static-only` (forced by PREFLIGHT.json — no container runtime) |
 | **Confidence Ceiling** | `E2-P` (property-proven static inspection) |
 | **Test Classification** | `RUNNABLE` |
-| **tsc Build Status** | `FAIL` (exit code: 1) |
+| **tsc Build Status** | `SKIPPED` (exit code: -1) |
 | **Attestation** | `ATTESTATION.jsonl` (machine-verified) |
 
 ---

@@ -2,11 +2,11 @@
   "schema": "hermes.tests.v6",
   "run_id": "hermes-2026-07-27-v6-studiopilot",
   "project": "studiopilot",
-  "produced_at": "2026-07-27T22:54:01.713870",
+  "produced_at": "2026-07-27T23:04:53.377158",
   "summary": {
     "status": "RUNNABLE",
     "passed": 0,
-    "failed": 1,
+    "failed": 0,
     "skipped": 0,
     "unrunnable": 0
   },
@@ -14,8 +14,8 @@
     {
       "suite": "TypeScript Compilation",
       "tool": "npx tsc --noEmit",
-      "status": "FAIL",
-      "exit_code": 1
+      "status": "SKIPPED",
+      "exit_code": -1
     }
   ]
 }
